@@ -21,7 +21,6 @@
 *.rar
 
 ### Java-Web ###
-## ignoring target file
 target/
 
 ### Maven ###
@@ -36,7 +35,6 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 ### Custom ###
-
 .classpath
 .project
 .settings/
