@@ -1,3 +1,12 @@
+# IMPORTANTE!
+
+Para compilar:
+
+```shell
+mvn compile
+mvn exec:java -Dexec.mainClass="com.group03.App"
+```
+
 # Especificación General de un Proyecto de Programación: Un Lenguaje Prototipo y su Entorno Web de Evaluación
 
 Acrónimo de referencia rápido para efectos del curso: _E-Nano2020_.
