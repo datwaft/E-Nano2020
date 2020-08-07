@@ -2,7 +2,7 @@
 
 Para compilar:
 
-```
+```shell
 mvn compile
 mvn exec:java -Dexec.mainClass="com.group03.App"
 ```
