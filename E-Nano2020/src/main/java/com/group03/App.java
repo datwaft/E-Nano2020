@@ -13,14 +13,14 @@ public class App extends NanoHTTPD {
   public App() throws IOException {
     super(8080);
     start(NanoHTTPD.SOCKET_READ_TIMEOUT, false);
-    System.out.println("\nRunning! Point your browsers to http://localhost:8080/ \n");
+    System.out.println("\n\u001B[32mThe webserver is running.\u001B[0m\nThe url is http://localhost:8080/\n");
   }
 
   public static void main(String[] args) {
     try {
       new App();
     } catch (IOException ioe) {
-      System.err.println("Couldn't start server:\n" + ioe);
+      System.err.println("\u001B[31mCouldn't start server:\u001B[0m\n" + ioe);
     }
   }
 
