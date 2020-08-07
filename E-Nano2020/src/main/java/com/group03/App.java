@@ -1,11 +1,14 @@
 package com.group03;
 
 import java.io.IOException;
-import java.util.Map;
-  
+import java.io.InputStream;
+import java.util.regex.Pattern;
+
 import fi.iki.elonen.NanoHTTPD;
+import fi.iki.elonen.NanoHTTPD.Response.Status;
   
 public class App extends NanoHTTPD {
+  Pattern isFile = Pattern.compile("^.*[^/]$");
 
   public App() throws IOException {
     super(8080);
@@ -23,13 +26,13 @@ public class App extends NanoHTTPD {
 
   @Override
   public Response serve(IHTTPSession session) {
-    String msg = "<html><body><h1>Hello server</h1>\n";
-    Map<String, String> parms = session.getParms();
-    if (parms.get("username") == null) {
-      msg += "<form action='?' method='get'>\n  <p>Your name: <input type='text' name='username'></p>\n" + "</form>\n";
+    String uri = session.getUri();
+    String file = (isFile.matcher(uri).matches() ? uri : uri + "index.html");
+    InputStream fileStream = getClass().getClassLoader().getResourceAsStream(file.substring(1));
+    if (fileStream != null) {
+      return NanoHTTPD.newChunkedResponse(Status.OK, getMimeTypeForFile(file), fileStream);
     } else {
-      msg += "<p>Hello, " + parms.get("username") + "!</p>";
+      return newFixedLengthResponse("<html><body><h1>Error 404: File '" + file + "' not found</h1></body></html>");
     }
-    return newFixedLengthResponse(msg + "</body></html>\n");
   }
 }
