@@ -3,7 +3,7 @@
 Para compilar:
 
 ```shell
-mvn compile
+mvn package
 mvn exec:java -Dexec.mainClass="com.group03.App"
 ```
 
