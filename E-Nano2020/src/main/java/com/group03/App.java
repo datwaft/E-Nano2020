@@ -37,10 +37,10 @@ public class App extends NanoHTTPD {
     String file = (isFile.matcher(uri).matches() ? uri : uri + "index.html");
     InputStream fileStream = getClass().getClassLoader().getResourceAsStream(file.substring(1));
     if (fileStream != null) {
-      System.out.println(fSuccess.format("Succesful response to '" + file + "' petition."));
+      System.out.println(fSuccess.format("Succesful response to '" + file + "' petition [" + session.getMethod() + "]."));
       return newChunkedResponse(Status.OK, getMimeTypeForFile(file), fileStream);
     } else {
-      System.err.println(fWarning.format("Resource not found: '" + file + "'."));
+      System.err.println(fWarning.format("Resource not found: '" + file + "' [" + session.getMethod() + "]."));
       return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist");
     }
   }
