@@ -2,6 +2,19 @@ html {
   height: 100%;
 }
 
-h1 {
-  color: red;
+#editor {
+  position: absolute;
+  right: 5%;
+  left: 3%;
+  height: 500px;
+}
+
+#terminal {
+  padding: 20px;
+  background-color: black;
+  height: 500px;
+}
+
+#content {
+  height: 515px;
 }
