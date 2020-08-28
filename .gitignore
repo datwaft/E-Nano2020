@@ -38,5 +38,6 @@ buildNumber.properties
 .classpath
 .project
 .settings/
+.vscode/
 
 # Generated from https://www.toptal.com/developers/gitignore/api/maven,java,java-web
