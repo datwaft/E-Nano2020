@@ -19,6 +19,18 @@
       href="https://use.fontawesome.com/releases/v5.0.12/css/all.css"
     />
     <style type="text/css" media="screen"></style>
+    <!-- Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Ace -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+    <!-- Prism Editor -->
+    <script src="https://unpkg.com/vue-prism-editor"></script>
+    <link rel="stylesheet" href="https://unpkg.com/vue-prism-editor/dist/prismeditor.min.css" />
+    <!-- custom highlighter: -->
+    <script src="https://unpkg.com/prismjs/prism.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/prismjs/themes/prism-tomorrow.css" />
   </head>
   <body class="bg-primary">
     <nav class="navbar navbar-light bg-dark">
@@ -26,46 +38,26 @@
       <ul class="navbar-nav ml-auto">
         <li class="nav-item active">
           <a class="nav-link text-light" href="#">
-            About <span class="sr-only"></span
-          ></a>
+            About <span class="sr-only"></span>
+          </a>
         </li>
       </ul>
     </nav>
-    <nav class="navbar navbar-expand-lg">
-      <form class="form-inline">
+    <div id="app">
+      <nav class="navbar navbar-expand-lg">
         <button
           class="btn btn-success"
-          type="submit"
-          style="margin-left: 540px"
+          style="margin-left: 20px"
+          @click="run"
         >
-          <i class="fa fa-check-circle"> Compile </i>
-        </button>
-        <button class="btn btn-success" type="submit" style="margin-left: 20px">
           <i class="fa fa-play"> Run </i>
         </button>
-      </form>
-    </nav>
-    <div class="container-fluid" id="content">
-      <div class="row">
-        <div class="col-7">
-          <div id="editor"></div>
-        </div>
-        <div class="col-5">
-          <div id="terminal"></div>
-        </div>
+      </nav>
+      <div class="container-fluid" id="content">
+        <prism-editor class="editor height-200" v-model="input" :highlight="highlighter" line-numbers></prism-editor>
+        <prism-editor class="editor height-200" v-model="output" :readonly="true" :highlight="highlighter" line-numbers></prism-editor>
       </div>
     </div>
-    <script src="/js/ace.js" type="text/javascript" charset="utf-8"></script>
-    <script
-      src="/js/client-editor.js"
-      type="text/javascript"
-      charset="utf-8"
-    ></script>
-    <script
-      src="/js/client-terminal.js"
-      type="text/javascript"
-      charset="utf-8"
-    ></script>
   </body>
-  <footer></footer>
+  <script src="/js/main.js" type="text/javascript" charset="utf-8"></script>
 </html>

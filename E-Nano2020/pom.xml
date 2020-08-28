@@ -41,9 +41,14 @@
       <artifactId>packages-jpl</artifactId>
       <version>V8.3.5</version>
     </dependency>
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20200518</version>
+    </dependency>
   </dependencies>
   <build>
-    <finalName>restaurant</finalName>
+    <finalName>E-Nano2020</finalName>
 		<plugins>
       <plugin> 
         <groupId>org.apache.maven.plugins</groupId>
