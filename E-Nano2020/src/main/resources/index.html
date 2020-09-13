@@ -87,7 +87,22 @@
     </nav>
     <!-- Modal About-->
     <b-modal variant="ok" id="about" title="About" busy>
-      <div v-html="info">
+      <div>
+        <h5>Authors</h5>
+        <ul>
+          <li v-for="name in info.author" :key="name">
+            {{ name }}
+          </li>
+        </ul>
+        <h5>Group</h5> {{ info.group }}
+        <h5>Course</h5> {{ info.course }}
+        <h5>Version</h5> {{ info.version }}
+        <h5>Date</h5> {{ info.date }}
+        <br>
+        <span>
+          <i class="fab fa-github font-size-30"></i>
+          <a :href="info.github">Link to Repository</a>
+        <span>
       </div>
       <template v-slot:modal-footer="{ ok }">
         <b-button variant="dark" @click="ok()">

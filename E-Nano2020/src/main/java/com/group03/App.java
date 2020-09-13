@@ -80,7 +80,7 @@ public class App extends RouterNanoHTTPD {
     public Response get(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
       try {
 
-        InputStream infoStream = getClass().getClassLoader().getResourceAsStream("info/info.html");
+        InputStream infoStream = getClass().getClassLoader().getResourceAsStream("info/info.json");
 
         String info = MiscUtils.inputStreamToString(infoStream);
 
