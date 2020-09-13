@@ -121,7 +121,7 @@ public class App extends RouterNanoHTTPD {
 
         OutUtils.successFormatWithDatetime("Successful response to '%s' request [%s].", session.getUri(), session.getMethod());
         OutUtils.normalFormat("The data is: '%s'.%n", data);
-        return newFixedLengthResponse(Response.Status.OK, MIME_PLAINTEXT, "The requested has been successful.\nYour data is: '" + data + "'");
+        return newFixedLengthResponse(Response.Status.OK, MIME_PLAINTEXT, "The request was successful.\nYour data is: '" + data + "'");
       } catch (IOException | ResponseException e) {
         OutUtils.warningFormatWithDatetime("Invalid request for '%s' [%s].%n", session.getUri(), session.getMethod());
         return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
