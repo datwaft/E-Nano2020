@@ -1,6 +1,6 @@
 # IMPORTANTE!
 
-Para compilar:
+Para compilar y ejecutar:
 
 ```shell
 mvn package
