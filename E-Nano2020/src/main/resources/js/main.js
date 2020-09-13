@@ -2,7 +2,8 @@
 
 var data = {
   input: "",
-  output: ""
+  output: "",
+  info: ""
 }
 
 var app = new Vue({
@@ -15,7 +16,20 @@ var app = new Vue({
           data: this.input
         })
         this.output = response.data
-        console.log(response.data)
+      } catch (err) {
+        console.error(err)
+      }
+    },
+    cleanInput: async function (event) {
+      this.input = ""
+    },
+    cleanOutput: async function (event) {
+      this.output = ""
+    },
+    getInfo: async function (event) {
+      try {
+        var response = await axios.get('/info')
+        this.info = response.data
       } catch (err) {
         console.error(err)
       }

@@ -11,17 +11,25 @@
     <style type="text/css" media="screen"></style>
     <link rel="stylesheet" href="css/style.css" />
     
+    <!-- FavIcon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icon/favicon-16x16.png">
+    <link rel="manifest" href="/icon/site.webmanifest">
+    <link rel="mask-icon" href="/icon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/icon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="/icon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" 
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" 
-    />
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.0.12/css/all.css"
-    />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" />
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/c3ca684320.js" crossorigin="anonymous"></script>
     <!-- Vue.js -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- Axios -->
@@ -29,60 +37,50 @@
     <!-- Prism Editor -->
     <script src="https://unpkg.com/vue-prism-editor"></script>
     <link rel="stylesheet" href="https://unpkg.com/vue-prism-editor/dist/prismeditor.min.css" />
-    <!-- custom highlighter: -->
-    <script src="https://unpkg.com/prismjs/prism.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/prismjs/themes/prism-tomorrow.css" />
   </head>
   <body>
-    <!-- Navegation bar-->
-    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
-      <div class="font-size-30 color-white">E-Nano</div>
-      <button class="btn btn-dark ml-auto" type="button" data-toggle="modal" data-target="#about">
-          About
-      </button>
-    </nav>
-    <!-- Modal About-->
-    <about class="modal fade aja" id="about" tabindex="-1" 
-           data-backdrop="static" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header bg-dark">
-            <div class="color-white font-size-30">About</div>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <i class="fa fa-times" aria-hidden="true"></i>
-            </button>
-          </div>
-          <div class="modal-body">
-            <h5 class="modal-title">Authors</h5>
-            <ul>
-              <li>Jose David Barrantes Araya</li>
-              <li>Joy Bonilla Fley</li>
-              <li>David Alberto Guevara Sánchez</li>
-              <li>Natalia Solano Azofeifa</li>
-              <li>Luis David Villalobos González</li>
-            </ul>
-            <h5>Group</h5> 03-10am
-            <h5>Course</h5> EIF400 Paradigmas de Programacion
-            <h5>Version</h5> 1.0.0
-            <h5>Date</h5> 2020-09-02 <br>
-            <span><i class="fab fa-github font-size-30"></i>
-            <a href="https://github.com/datwaft/E-Nano2020">Link to Repository</a>
-            <span>
+    <div id="app">
+      <!-- Navegation bar-->
+      <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+        <div class="font-size-30 color-white">E-Nano</div>
+        <button class="btn btn-dark ml-auto" type="button" data-toggle="modal" data-target="#about" @click="getInfo">
+            About
+        </button>
+      </nav>
+      <!-- Modal About-->
+      <about class="modal fade aja" id="about" tabindex="-1" 
+             data-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header bg-dark">
+              <div class="color-white font-size-30">About</div>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <i class="fa fa-times" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div class="modal-body" v-html="info">
+            </div>
           </div>
         </div>
-      </div>
-    </about>    
-    <div id="app">
-      <button class="btn btn-success left-40pc marginTopBottom1pc" @click="run">
-        <i class="fa fa-play"> Run </i>
-      </button>
-      <div class="container-fluid">
-        <div class="row height-480">
-          <div class="col-6">
-            <prism-editor class="editor" v-model="input" :highlight="highlighter" line-numbers></prism-editor>
-          </div>
-          <div class="col-6">
-            <prism-editor class="editor" v-model="output" :readonly="true" :highlight="highlighter"></prism-editor>
+      </about>    
+      <div>
+        <button class="btn btn-success left-40pc marginTopBottom1pc" @click="cleanInput">
+          <i class="fa fa-broom"></i> Clean
+        </button>
+        <button class="btn btn-success left-40pc marginTopBottom1pc" @click="run">
+          <i class="fas fa-play"></i> Run
+        </button>
+        <button class="btn btn-success left-40pc marginTopBottom1pc" @click="cleanOutput">
+          <i class="fa fa-broom"></i> Clean
+        </button>
+        <div class="container-fluid">
+          <div class="row height-480">
+            <div class="col-6">
+              <prism-editor class="editor" v-model="input" :highlight="highlighter" line-numbers></prism-editor>
+            </div>
+            <div class="col-6">
+              <prism-editor class="editor" v-model="output" :readonly="true" :highlight="highlighter"></prism-editor>
+            </div>
           </div>
         </div>
       </div>

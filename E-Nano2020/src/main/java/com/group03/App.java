@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 
 import com.diogonunes.jcolor.AnsiFormat;
 import com.diogonunes.jcolor.Attribute;
+import com.group03.utils.MiscUtils;
 
 import org.json.JSONObject;
 
@@ -20,7 +21,7 @@ public class App extends RouterNanoHTTPD {
   private static AnsiFormat fError = new AnsiFormat(Attribute.RED_TEXT(), Attribute.BOLD());
   private static AnsiFormat fWarning = new AnsiFormat(Attribute.YELLOW_TEXT(), Attribute.BOLD());
   private static AnsiFormat fSuccess = new AnsiFormat(Attribute.GREEN_TEXT());
-  private static final Integer port = 8080;
+  private static final Integer port = 8088;
 
   public App() throws IOException {
     super(port);
@@ -39,10 +40,12 @@ public class App extends RouterNanoHTTPD {
 
   @Override
   public void addMappings() {
-    this.addRoute("/api/.*", CodeHandler.class);
+    this.addRoute("/api.*", CodeHandler.class);
     this.addRoute("/api", CodeHandler.class);
+    this.addRoute("/info.*", InfoHandler.class);
+    this.addRoute("/info", InfoHandler.class);
 
-    this.addRoute("/(?!api).*", ResourceHandler.class);
+    this.addRoute("/(?!(api|info)).*", ResourceHandler.class);
   }
 
   public static class ResourceHandler extends StaticPageHandler {
@@ -56,6 +59,38 @@ public class App extends RouterNanoHTTPD {
         return newChunkedResponse(getStatus(), getMimeTypeForFile(file), fileStream);
       } else {
         System.err.println(fWarning.format("Resource not found: '" + file + "' [" + session.getMethod() + "]."));
+        return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
+      }
+    }
+  }
+
+  public static class InfoHandler extends DefaultStreamHandler {
+    @Override
+    public String getMimeType() {
+      return MIME_PLAINTEXT;
+    }
+
+    @Override
+    public IStatus getStatus() {
+      return Response.Status.OK;
+    }
+
+    @Override
+    public InputStream getData() {
+      return new ByteArrayInputStream("Your request was successful :D".getBytes());
+    }
+    @Override
+    public Response get(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
+      try {
+
+        InputStream infoStream = getClass().getClassLoader().getResourceAsStream("info/info.html");
+
+        String info = MiscUtils.inputStreamToString(infoStream);
+
+        System.out.println(fSuccess.format("Succesful response to '" + session.getUri() + "' petition [" + session.getMethod() + "]."));
+        return newFixedLengthResponse(Response.Status.OK, MIME_PLAINTEXT, info);
+      } catch (Exception e) {
+        System.err.println(fWarning.format("Invalid get petition for '" + session.getUri() + "' [" + session.getMethod() + "]."));
         return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
       }
     }
