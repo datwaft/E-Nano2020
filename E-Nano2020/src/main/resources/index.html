@@ -48,7 +48,7 @@
         </button>
       </nav>
       <!-- Modal About-->
-      <about class="modal fade modal-about" id="about" tabindex="-1" 
+      <div class="modal fade modal-about" id="about" tabindex="-1" 
              data-backdrop="static" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -62,7 +62,7 @@
             </div>
           </div>
         </div>
-      </about>    
+      </div>    
       <div>
       
         <button class="btn btn-success left-40pc marginTopBottom1pc" @click="run">
@@ -83,9 +83,11 @@
                 <i class="fa fa-broom"></i> Clean
               </button>
             </div>
-            <button class="btn btn-dark left-20pc marginTopBottom1pc" @click="cleanOutput">
-              <i class="fa fa-broom"></i> Clean
-            </button>
+            <div class="col-6">
+              <button class="btn btn-dark left-40pc marginTopBottom1pc" @click="cleanOutput">
+                <i class="fa fa-broom"></i> Clean
+              </button>
+            </div>
           </div>
         </div>
       </div>
