@@ -7,8 +7,8 @@ pre {
   color: #ccc !important;
 }
 
-.height-480{
-  height: 480px;
+.height-460{
+  height: 460px;
 }
 
 .color-white{
@@ -24,6 +24,11 @@ pre {
   margin-left: 47%;  
 }
 
+.left-20pc{
+  margin: 0.5%;
+  margin-left: 20%;  
+}
+
 .editor {
   color: #ccc;
   background: #2d2d2d;
@@ -33,7 +38,7 @@ pre {
   padding: 5px;
 }
 
-.aja{
+.modal-about{
   width: 10px;
   height: 10px;
 }

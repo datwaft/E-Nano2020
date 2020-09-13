@@ -48,7 +48,7 @@
         </button>
       </nav>
       <!-- Modal About-->
-      <about class="modal fade aja" id="about" tabindex="-1" 
+      <about class="modal fade modal-about" id="about" tabindex="-1" 
              data-backdrop="static" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -64,23 +64,28 @@
         </div>
       </about>    
       <div>
-        <button class="btn btn-success left-40pc marginTopBottom1pc" @click="cleanInput">
-          <i class="fa fa-broom"></i> Clean
-        </button>
+      
         <button class="btn btn-success left-40pc marginTopBottom1pc" @click="run">
           <i class="fas fa-play"></i> Run
         </button>
-        <button class="btn btn-success left-40pc marginTopBottom1pc" @click="cleanOutput">
-          <i class="fa fa-broom"></i> Clean
-        </button>
         <div class="container-fluid">
-          <div class="row height-480">
+          <div class="row height-460">
             <div class="col-6">
               <prism-editor class="editor" v-model="input" :highlight="highlighter" line-numbers></prism-editor>
             </div>
             <div class="col-6">
               <prism-editor class="editor" v-model="output" :readonly="true" :highlight="highlighter"></prism-editor>
             </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <button class="btn btn-dark left-40pc marginTopBottom1pc" @click="cleanInput">
+                <i class="fa fa-broom"></i> Clean
+              </button>
+            </div>
+            <button class="btn btn-dark left-20pc marginTopBottom1pc" @click="cleanOutput">
+              <i class="fa fa-broom"></i> Clean
+            </button>
           </div>
         </div>
       </div>
