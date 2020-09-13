@@ -7,9 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import com.diogonunes.jcolor.AnsiFormat;
-import com.diogonunes.jcolor.Attribute;
 import com.group03.utils.MiscUtils;
+import com.group03.utils.OutUtils;
 
 import org.json.JSONObject;
 
@@ -18,23 +17,21 @@ import fi.iki.elonen.router.RouterNanoHTTPD;
   
 public class App extends RouterNanoHTTPD {
   private static Pattern isFile = Pattern.compile("^.*[^/]$");
-  private static AnsiFormat fError = new AnsiFormat(Attribute.RED_TEXT(), Attribute.BOLD());
-  private static AnsiFormat fWarning = new AnsiFormat(Attribute.YELLOW_TEXT(), Attribute.BOLD());
-  private static AnsiFormat fSuccess = new AnsiFormat(Attribute.GREEN_TEXT());
   private static final Integer port = 8088;
 
   public App() throws IOException {
     super(port);
     this.addMappings();
     this.start(SOCKET_READ_TIMEOUT, false);
-    System.out.println("\n" + fSuccess.format("The webserver is running on the port " + port + ".") + "\n" + "The url is http://localhost:" + port + "/" + "\n");
+    OutUtils.successFormat("%nThe webserver is running on the port %d.", port);
+    OutUtils.normalFormat("The url is http://localhost:%d/%n", port);
   }
 
   public static void main(String[] args) {
     try {
       new App();
     } catch (IOException ioe) {
-      System.err.println("\n" + fError.format("Couldn't start server:" + ioe) + "\n");
+      OutUtils.errorFormat("%nCould not start server: %s%n", ioe.getLocalizedMessage());
     }
   }
 
@@ -55,10 +52,10 @@ public class App extends RouterNanoHTTPD {
       String file = (isFile.matcher(uri).matches() ? uri : uri + "index.html");
       InputStream fileStream = getClass().getClassLoader().getResourceAsStream(file.substring(1));
       if (fileStream != null) {
-        System.out.println(fSuccess.format("Succesful response to '" + file + "' petition [" + session.getMethod() + "]."));
+        OutUtils.successFormatWithDatetime("Successful response to '%s' static file request [%s].%n", file, session.getMethod());
         return newChunkedResponse(getStatus(), getMimeTypeForFile(file), fileStream);
       } else {
-        System.err.println(fWarning.format("Resource not found: '" + file + "' [" + session.getMethod() + "]."));
+        OutUtils.warningFormatWithDatetime("Static file not found: '%s' [%s].%n", file, session.getMethod());
         return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
       }
     }
@@ -87,10 +84,10 @@ public class App extends RouterNanoHTTPD {
 
         String info = MiscUtils.inputStreamToString(infoStream);
 
-        System.out.println(fSuccess.format("Succesful response to '" + session.getUri() + "' petition [" + session.getMethod() + "]."));
+        OutUtils.successFormatWithDatetime("Successful response to '%s' request [%s].%n", session.getUri(), session.getMethod());
         return newFixedLengthResponse(Response.Status.OK, MIME_PLAINTEXT, info);
       } catch (Exception e) {
-        System.err.println(fWarning.format("Invalid get petition for '" + session.getUri() + "' [" + session.getMethod() + "]."));
+        OutUtils.warningFormatWithDatetime("Invalid request for '%s' [%s].%n", session.getUri(), session.getMethod());
         return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
       }
     }
@@ -122,11 +119,11 @@ public class App extends RouterNanoHTTPD {
         JSONObject jsonData = new JSONObject(postData);
         String data = jsonData.getString("data");
 
-        System.out.println(fSuccess.format("Succesful response to '" + session.getUri() + "' petition [" + session.getMethod() + "]."));
-        System.out.println("The data is: '" + data + "'");
+        OutUtils.successFormatWithDatetime("Successful response to '%s' request [%s].", session.getUri(), session.getMethod());
+        OutUtils.normalFormat("The data is: '%s'.%n", data);
         return newFixedLengthResponse(Response.Status.OK, MIME_PLAINTEXT, "The requested has been successful.\nYour data is: '" + data + "'");
       } catch (IOException | ResponseException e) {
-        System.err.println(fWarning.format("Invalid post petition for '" + session.getUri() + "' [" + session.getMethod() + "]."));
+        OutUtils.warningFormatWithDatetime("Invalid request for '%s' [%s].%n", session.getUri(), session.getMethod());
         return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
       }
     }
