@@ -81,26 +81,20 @@
     <!-- Navegation bar-->
     <nav class="navbar navbar-expand-lg navbar-light bg-dark">
       <div class="font-size-30 color-white">E-Nano</div>
-      <button class="btn btn-dark ml-auto" type="button" data-toggle="modal" data-target="#about" @click="getInfo">
-          About
-      </button>
+      <b-button variant="dark" class="ml-auto" v-b-modal.about @click="getInfo">
+        About
+      </b-button>
     </nav>
     <!-- Modal About-->
-    <div class="modal fade modal-about" id="about" tabindex="-1" 
-           data-backdrop="static" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header bg-dark">
-            <div class="color-white font-size-30">About</div>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="cleanInfo">
-              <i class="fa fa-times" aria-hidden="true"></i>
-            </button>
-          </div>
-          <div class="modal-body" v-html="info">
-          </div>
-        </div>
+    <b-modal variant="ok" id="about" title="About" busy>
+      <div v-html="info">
       </div>
-    </div>    
+      <template v-slot:modal-footer="{ ok }">
+        <b-button variant="dark" @click="ok()">
+          Close
+        </b-button>
+      </template>
+    </b-modal>
     <div>
       <b-button variant="success" class="left-40pc marginTopBottom1pc" @click="run">
         <i class="fas fa-play"></i> Run
