@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: data,
   methods: {
-    run: async function (event) {
+    run: async function () {
       try {
         var response = await axios.post('/api', {
           data: this.input
@@ -20,19 +20,22 @@ var app = new Vue({
         console.error(err)
       }
     },
-    cleanInput: async function (event) {
+    cleanInput: function () {
       this.input = ""
     },
-    cleanOutput: async function (event) {
+    cleanOutput: function () {
       this.output = ""
     },
-    getInfo: async function (event) {
+    getInfo: async function () {
       try {
         var response = await axios.get('/info')
         this.info = response.data
       } catch (err) {
         console.error(err)
       }
+    },
+    cleanInfo: function () {
+      this.info = ""
     },
     highlighter: function (code) {
       return code;
