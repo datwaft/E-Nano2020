@@ -7,7 +7,7 @@
   <!-- ┌──────────────────────────────────────────────────────────────────────────────────────┐ --> 
   <!-- │                                    Configuration                                     │ --> 
   <!-- └──────────────────────────────────────────────────────────────────────────────────────┘ --> 
-  <title>E-Nano</title>
+  <title>E-Nano2020</title>
   <!-- ┌──────────────────────────────────────────────────────────────────────────────────────┐ --> 
   <!-- │                                         Meta                                         │ --> 
   <!-- └──────────────────────────────────────────────────────────────────────────────────────┘ --> 
@@ -80,14 +80,18 @@
   <div id="app">
     <!-- Navegation bar-->
     <nav class="navbar navbar-expand-lg navbar-light bg-dark">
-      <div class="font-size-30 color-white">E-Nano</div>
-      <b-button variant="dark" class="ml-auto" v-b-modal.about @click="getInfo">
-        About
-      </b-button>
+      <div class="font-size-30 color-white"><i class="fab fa-etsy"></i>-Nano 2020</div>
+      <template>
+        <div class="ml-auto">
+          <b-button v-b-toggle.about @click="getInfo" variant="dark">
+            <i class="fas fa-info-circle"></i> About 
+          </b-button>
+        </div>
+      </template>      
     </nav>
     <!-- Modal About-->
-    <b-modal variant="ok" id="about" title="About" busy>
-      <div>
+    <b-sidebar id="about" bg-variant="dark" text-variant="light" right shadow title="About" busy>
+      <div class="px-3 py-2">
         <h5>Authors</h5>
         <ul>
           <li v-for="name in info.author" :key="name">
@@ -104,37 +108,32 @@
           <a :href="info.github">Link to Repository</a>
         <span>
       </div>
-      <template v-slot:modal-footer="{ ok }">
-        <b-button variant="dark" @click="ok()">
-          Close
-        </b-button>
-      </template>
-    </b-modal>
+    </b-sidebar>
     <div>
-      <b-button variant="success" class="left-40pc marginTopBottom1pc" @click="run">
-        <i class="fas fa-play"></i> Run
-      </b-button>
       <div class="container-fluid">
-        <div class="row height-460">
-          <div class="col-6">
+        <b-row class=" min-height-460 mg-2">
+          <b-col>
             <prism-editor class="editor" v-model="input" :highlight="highlighter" line-numbers></prism-editor>
-          </div>
-          <div class="col-6">
+          </b-col>
+          <b-col>
             <prism-editor class="editor" v-model="output" :readonly="true" :highlight="highlighter"></prism-editor>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-6">
-            <b-button variant="dark" class="left-40pc marginTopBottom1pc" @click="cleanInput">
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col>
+            <b-button squared variant="light" class="left-47" @click="cleanInput">
               <i class="fa fa-broom"></i> Clean
             </b-button>
-          </div>
-          <div class="col-6">
-            <b-button variant="dark" class="left-40pc marginTopBottom1pc" @click="cleanOutput">
+            <b-button squared variant="success" class="left-10" @click="submit">
+              <i class="fas fa-play"></i> Submit
+            </b-button>
+          </b-col>
+          <b-col>
+            <b-button squared variant="light" class="left-47" @click="cleanOutput">
               <i class="fa fa-broom"></i> Clean
             </b-button>
-          </div>
-        </div>
+          </b-col>
+        </b-row>
       </div>
     </div>
   </div>

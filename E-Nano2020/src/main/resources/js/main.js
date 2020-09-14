@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: data,
   methods: {
-    run: async function () {
+    submit: async function () {
       try {
         var response = await axios.post('/api', {
           data: this.input

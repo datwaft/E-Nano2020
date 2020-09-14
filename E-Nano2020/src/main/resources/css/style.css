@@ -7,8 +7,8 @@ pre {
   color: #ccc !important;
 }
 
-.height-460{
-  height: 460px;
+.min-height-460{
+  min-height: 460px;
 }
 
 .color-white{
@@ -19,9 +19,20 @@ pre {
   font-size: 30px;  
 }
 
-.left-40pc{
-  margin: 0.5%;
+.left-47{
   margin-left: 47%;  
+}
+
+.left-10{
+  margin-left: 10%;  
+}
+
+.mg-1{
+  margin: 1%;
+}
+
+.mg-2{
+  margin: 2%;
 }
 
 .editor {
