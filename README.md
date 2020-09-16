@@ -19,6 +19,16 @@ mvn exec:java -Dexec.mainClass="com.group03.App"
 
 ---
 
+**NOTA**: antes de empezar a ejecutar comandos se debe entrar a la carpeta E-Nano2020, la cual contiene un archivo `pom.xml`. A continuación unos ejemplos:
+
+#### Raíz del repositorio - NO ingresar comandos de _Maven_ ahí.
+
+![image](https://user-images.githubusercontent.com/37723586/93397727-69caa780-f837-11ea-9151-19fccf2a6396.png)
+
+#### Raíz del proyecto de Maven - SÍ ingresar comandos de _Maven_ ahí.
+
+![image](https://user-images.githubusercontent.com/37723586/93397862-b1513380-f837-11ea-9854-b80f633279b8.png)
+
 ### Compilación
 
 Para compilar se usa el comando:
