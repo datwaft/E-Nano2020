@@ -58,3 +58,26 @@ Una vez se terminó de iniciar el servidor va a aparecer una pantalla similar a 
 
 La url para la conexión debe aparecer en la consola una vez se inició el servidor, pero la por defecto es la siguiente: `http://localhost:8088/`.
 
+Una vez entró a la url le debe salir una pantalla similar a la siguiente:
+
+![image](https://user-images.githubusercontent.com/37723586/93396746-62a29a00-f835-11ea-9be5-73793b03ba4e.png)
+
+En el recuadro negro de la derecha puede introducir el código E-Nano a ejecutar, y en el derecha se producirá el resultado de la ejecución del código después de usted apretar el botón verde **Submit**.
+
+Los botones de **Clean** sirven para limpiar los datos de cualquiera de los dos lados.
+
+El botón de arriba a la derecha que dice **About** sirve para ver los integrantes del equipo de trabajo.
+
+## Créditos
+
+Grupo de trabajo:
+- David Alberto Guevara Sánchez\
+  402450355
+- Joy Bonilla Fley\
+  402360421
+- Jose Barrantes Araya\
+  207600954
+- Natalia Solano Azofeifa\
+  117290958
+- Luis David Villalobos Gonzalez\
+  117540697  
