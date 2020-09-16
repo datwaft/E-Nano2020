@@ -82,7 +82,7 @@ El botón de arriba a la derecha que dice **About** sirve para ver los integrant
 
 ## Créditos
 
-Grupo de trabajo:
+**Grupo de trabajo No.03:**
 - David Alberto Guevara Sánchez\
   402450355
 - Joy Bonilla Fley\
@@ -93,3 +93,4 @@ Grupo de trabajo:
   117290958
 - Luis David Villalobos Gonzalez\
   117540697  
+**Horario:** 10am.
