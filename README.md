@@ -62,11 +62,13 @@ Una vez entró a la url le debe salir una pantalla similar a la siguiente:
 
 ![image](https://user-images.githubusercontent.com/37723586/93396746-62a29a00-f835-11ea-9be5-73793b03ba4e.png)
 
-En el recuadro negro de la derecha puede introducir el código E-Nano a ejecutar, y en el derecha se producirá el resultado de la ejecución del código después de usted apretar el botón verde **Submit**.
+~~En el recuadro negro de la derecha puede introducir el código E-Nano a ejecutar, y en el derecha se producirá el resultado de la ejecución del código después de usted apretar el botón verde **Submit**.~~
+
+En el recuadro negro a la derecha, por esta ser una versión incompleta, al introducir un texto y luego darle a **Submit** aparecerá un mensaje haciendo _echo_ del mensaje que usted escribió como garantía de que el servidor respondió a su petición y está funcionando correctamente.
 
 Los botones de **Clean** sirven para limpiar los datos de cualquiera de los dos lados.
 
-El botón de arriba a la derecha que dice **About** sirve para ver los integrantes del equipo de trabajo.
+El botón de arriba a la derecha que dice **About** sirve para ver los integrantes del equipo de trabajo, los cuales son pedidos como _JSON_ al servidor.
 
 ## Créditos
 
