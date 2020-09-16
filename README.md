@@ -104,7 +104,7 @@ La estructura del proyecto es la siguiente:
               └───group03
 ```
 
-Los archivos web están en la carpeta `E-Nano2020/src/main/resources`; el resto del proyecto se maneja de la forma estándar de Java.
+Los archivos web están en la carpeta `/E-Nano2020/src/main/resources`; el resto del proyecto se maneja de la forma estándar de Java.
 
 ## Créditos
 
