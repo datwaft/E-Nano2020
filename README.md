@@ -80,6 +80,32 @@ Los botones de **Clean** sirven para limpiar los datos de cualquiera de los dos 
 
 El botón de arriba a la derecha que dice **About** sirve para ver los integrantes del equipo de trabajo, los cuales son pedidos como _JSON_ al servidor.
 
+## Estructura del proyecto
+
+La estructura del proyecto es la siguiente:
+
+```tree
+.[root]
+└───E-Nano2020
+    └───src
+        ├───main
+        │   ├───java
+        │   │   └───com
+        │   │       └───group03
+        │   │           └───utils
+        │   └───resources
+        │       ├───css
+        │       ├───icon
+        │       ├───info
+        │       └───js
+        └───test
+          └───java
+            └───com
+              └───group03
+```
+
+Los archivos web están en la carpeta `E-Nano2020/src/main/resources`; el resto del proyecto se maneja de la forma estándar de Java.
+
 ## Créditos
 
 **Grupo de trabajo No.03:**
