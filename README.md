@@ -52,7 +52,7 @@ Una vez se terminó de iniciar el servidor va a aparecer una pantalla similar a 
 
 ![image](https://user-images.githubusercontent.com/37723586/93396337-b660b380-f834-11ea-9277-78b2bb011a9b.png)
 
-**Nota:** Una vez que el servidor se está ejecutando no lo cierre hasta que haya terminado completamente de usar el proyecto, posiblemente con CTRL+C o CTRL+Z - dependiendo de su sistema operativo.
+**Nota:** Una vez que el servidor se está ejecutando no lo cierre hasta que haya terminado completamente de usar el proyecto, posiblemente con `CTRL+C` o `CTRL+Z` - dependiendo de su sistema operativo.
 
 ### Conexión desde el navegador
 
