@@ -38,16 +38,16 @@ import com.group03.utils.OutUtils;
 
 import org.json.JSONObject;
 
-import fi.iki.elonen.NanoHTTPD.Response.IStatus;
-import fi.iki.elonen.router.RouterNanoHTTPD;
+import fi.iki.elonen.NanoHTTPD.Response.IStatus;//status de la respuesta del servidor
+import fi.iki.elonen.router.RouterNanoHTTPD;//conexión del router
   
-public class App extends RouterNanoHTTPD {
-  private static Pattern isFile = Pattern.compile("^.*[^/]$");
-  private static final Integer port = 8088;
+public class App extends RouterNanoHTTPD {//es un servidor web ligero (para proyectos pequeños) y de código abierto escrito en Java.
+  private static Pattern isFile = Pattern.compile("^.*[^/]$");//guarda una cadena
+  private static final Integer port = 8088;//puerto de la aplicación, se puede cambiar
 
   public App() throws IOException {
     super(port);
-    this.addMappings();
+    this.addMappings();//método de la clase
     this.start(SOCKET_READ_TIMEOUT, false);
     OutUtils.successFormat("%nThe webserver is running on the port %d.", port);
     OutUtils.normalFormat("The url is http://localhost:%d/%n", port);
@@ -62,7 +62,7 @@ public class App extends RouterNanoHTTPD {
   }
 
   @Override
-  public void addMappings() {
+  public void addMappings() {//añade rutas
     this.addRoute("/api.*", CodeHandler.class);
     this.addRoute("/api", CodeHandler.class);
     this.addRoute("/info.*", InfoHandler.class);
@@ -74,14 +74,14 @@ public class App extends RouterNanoHTTPD {
   public static class ResourceHandler extends StaticPageHandler {
     @Override
     public Response get(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
-      String uri = session.getUri();
-      String file = (isFile.matcher(uri).matches() ? uri : uri + "index.html");
-      InputStream fileStream = getClass().getClassLoader().getResourceAsStream(file.substring(1));
+      String uri = session.getUri();//Return the URI used to open the WebSocket connection
+      String file = (isFile.matcher(uri).matches() ? uri : uri + "index.html");//ver que el uri calce con el archivo
+      InputStream fileStream = getClass().getClassLoader().getResourceAsStream(file.substring(1));//leer de un archivo, lee el carácter 1 para ver que exista el archivo
       if (fileStream != null) {
-        OutUtils.successFormatWithDatetime("Successful response to '%s' static file request [%s].%n", file, session.getMethod());
-        return newChunkedResponse(getStatus(), getMimeTypeForFile(file), fileStream);
+        OutUtils.successFormatWithDatetime("Successful response to '%s' static file request [%s].%n", file, session.getMethod());//imprime las solicitudes de los archivos del browser
+        return newChunkedResponse(getStatus(), getMimeTypeForFile(file), fileStream);//Es una respuesa fraccionada para cuando la respuesta es muy grande
       } else {
-        OutUtils.warningFormatWithDatetime("Static file not found: '%s' [%s].%n", file, session.getMethod());
+        OutUtils.warningFormatWithDatetime("Static file not found: '%s' [%s].%n", file, session.getMethod());//file not found. OutUtils=librería para salidas
         return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
       }
     }
@@ -90,7 +90,7 @@ public class App extends RouterNanoHTTPD {
   public static class InfoHandler extends DefaultStreamHandler {
     @Override
     public String getMimeType() {
-      return MIME_PLAINTEXT;
+      return MIME_PLAINTEXT;//Es el formato de la respuesta.Puede ser JSON, por ejemplo. Es texto plano(se guarda en carácteres sin ningún formato)
     }
 
     @Override
