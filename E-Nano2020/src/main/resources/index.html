@@ -135,33 +135,31 @@
         <span>
       </div>
     </b-sidebar>
-    <div>
-      <div class="container-fluid">
-        <b-row class=" min-height-460 mg-2">
-          <b-col>
-            <prism-editor class="editor" v-model="input" :highlight="highlighter" line-numbers></prism-editor>
-          </b-col>
-          <b-col>
-            <prism-editor class="editor" v-model="output" :readonly="true" :highlight="highlighter"></prism-editor>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col>
-            <b-button squared variant="light" class="left-47" @click="cleanInput">
-              <i class="fa fa-broom"></i> Clean
-            </b-button>
-            <b-button squared variant="success" class="left-10" @click="submit">
-              <i class="fas fa-play"></i> Submit
-            </b-button>
-          </b-col>
-          <b-col>
-            <b-button squared variant="light" class="left-47" @click="cleanOutput">
-              <i class="fa fa-broom"></i> Clean
-            </b-button>
-          </b-col>
-        </b-row>
-      </div>
-    </div>
+    <b-container fluid>
+      <b-row class=" min-height-460 mg-2">
+        <b-col>
+          <prism-editor class="editor" v-model="input" :highlight="highlighter" line-numbers></prism-editor>
+        </b-col>
+        <b-col>
+          <prism-editor class="editor" v-model="output" :readonly="true" :highlight="highlighter"></prism-editor>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col class="text-center">
+          <b-button squared variant="light" @click="cleanInput">
+            <i class="fa fa-broom"></i> Clean
+          </b-button>
+          <b-button squared variant="success" @click="submit">
+            <i class="fas fa-play"></i> Submit
+          </b-button>
+        </b-col>
+        <b-col class="text-center">
+          <b-button squared variant="light" @click="cleanOutput">
+            <i class="fa fa-broom"></i> Clean
+          </b-button>
+        </b-col>
+      </b-row>
+    </b-containe>
   </div>
 </body>
 <!-- ╔════════════════════════════════════════════════════════════════════════════════════════╗ --> 
