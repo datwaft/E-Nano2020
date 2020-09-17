@@ -90,7 +90,7 @@ public class App extends RouterNanoHTTPD {
   public static class InfoHandler extends DefaultStreamHandler {
     @Override
     public String getMimeType() {
-      return MIME_PLAINTEXT;
+      return "application/json";
     }
 
     @Override
