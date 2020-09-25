@@ -7,7 +7,7 @@
  *
  * File: App.java
  * Description:
- *    Archivo inicial del servidor para E-Nano2020, se encarga de servir los archivos estáticos y procesesar las peticiones.
+ *    Archivo inicial del servidor para E-Nano2020, se encarga de procesar las peticiones del cliente.
  * Authors:
  * - David Alberto Guevara Sánchez
  *   402450355
@@ -21,7 +21,7 @@
  *   117540697
  * Group: 03
  * Schedule: 10am
- * Date of modification: 2020-09-16
+ * Date of modification: 2020-09-25
  */
 
 package com.group03;
@@ -31,29 +31,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import com.group03.utils.MiscUtils;
 import com.group03.utils.OutUtils;
+import com.group03.utils.RouterUtils;
 
 import org.json.JSONObject;
 
-import fi.iki.elonen.NanoHTTPD.Response.IStatus;//status de la respuesta del servidor
-import fi.iki.elonen.router.RouterNanoHTTPD;//conexión del router
+import fi.iki.elonen.NanoHTTPD.Response.IStatus;
+import fi.iki.elonen.router.RouterNanoHTTPD;
   
-public class App extends RouterNanoHTTPD {//es un servidor web ligero (para proyectos pequeños) y de código abierto escrito en Java.
-  private static Pattern isFile = Pattern.compile("^.*[^/]$");//guarda una cadena
-  private static final Integer port = 8088;//puerto de la aplicación, se puede cambiar
+public class App extends RouterNanoHTTPD {
+  private static final Integer port = 8099;
 
   public App() throws IOException {
     super(port);
-    this.addMappings();//método de la clase
+    this.addMappings();
     this.start(SOCKET_READ_TIMEOUT, false);
-    OutUtils.successFormat("%nThe webserver is running on the port %d.", port);
+    OutUtils.successFormat("%nThe router is running on the port %d.", port);
     OutUtils.normalFormat("The url is http://localhost:%d/%n", port);
   }
 
-  public static void main(String[] args) {
+  public static void main(String... args) {
     try {
       new App();
     } catch (IOException ioe) {
@@ -63,28 +62,8 @@ public class App extends RouterNanoHTTPD {//es un servidor web ligero (para proy
 
   @Override
   public void addMappings() {//añade rutas
-    this.addRoute("/api.*", CodeHandler.class);
     this.addRoute("/api", CodeHandler.class);
-    this.addRoute("/info.*", InfoHandler.class);
     this.addRoute("/info", InfoHandler.class);
-
-    this.addRoute("/(?!(api|info)).*", ResourceHandler.class);
-  }
-
-  public static class ResourceHandler extends StaticPageHandler {
-    @Override
-    public Response get(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
-      String uri = session.getUri();//Return the URI used to open the WebSocket connection
-      String file = (isFile.matcher(uri).matches() ? uri : uri + "index.html");//ver que el uri calce con el archivo
-      InputStream fileStream = getClass().getClassLoader().getResourceAsStream(file.substring(1));//leer de un archivo, lee el carácter 1 para ver que exista el archivo
-      if (fileStream != null) {
-        OutUtils.successFormatWithDatetime("Successful response to '%s' static file request [%s].%n", file, session.getMethod());//imprime las solicitudes de los archivos del browser
-        return newChunkedResponse(getStatus(), getMimeTypeForFile(file), fileStream);//Es una respuesa fraccionada para cuando la respuesta es muy grande
-      } else {
-        OutUtils.warningFormatWithDatetime("Static file not found: '%s' [%s].%n", file, session.getMethod());//file not found. OutUtils=librería para salidas
-        return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
-      }
-    }
   }
 
   public static class InfoHandler extends DefaultStreamHandler {
@@ -105,13 +84,14 @@ public class App extends RouterNanoHTTPD {//es un servidor web ligero (para proy
     @Override
     public Response get(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
       try {
-
-        InputStream infoStream = getClass().getClassLoader().getResourceAsStream("info/info.json");
-
-        String info = MiscUtils.inputStreamToString(infoStream);
+        var infoStream = getClass().getClassLoader().getResourceAsStream("info/info.json");
+        var info = MiscUtils.inputStreamToString(infoStream);
 
         OutUtils.successFormatWithDatetime("Successful response to '%s' request [%s].%n", session.getUri(), session.getMethod());
-        return newFixedLengthResponse(Response.Status.OK, MIME_PLAINTEXT, info);
+
+        var response = newFixedLengthResponse(Response.Status.OK, MIME_PLAINTEXT, info);
+        response = RouterUtils.allowCors(response, session);
+        return response;
       } catch (Exception e) {
         OutUtils.warningFormatWithDatetime("Invalid request for '%s' [%s].%n", session.getUri(), session.getMethod());
         return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
@@ -137,17 +117,22 @@ public class App extends RouterNanoHTTPD {//es un servidor web ligero (para proy
     @Override
     public Response post(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
       try {
-        Map<String, String> response = new HashMap<>();
-        session.parseBody(response);
+        var session_body = new HashMap<String, String>();
+        session.parseBody(session_body);
 
-        String postData = response.get("postData");
-        
-        JSONObject jsonData = new JSONObject(postData);
-        String data = jsonData.getString("data");
+        var post_data = session_body.get("postData");
+        var data = "";
+        if (post_data != null) {
+          var jsonData = new JSONObject(post_data);
+          data = jsonData.getString("data");
+        }
 
         OutUtils.successFormatWithDatetime("Successful response to '%s' request [%s].", session.getUri(), session.getMethod());
         OutUtils.normalFormat("The data is: '%s'.%n", data);
-        return newFixedLengthResponse(Response.Status.OK, MIME_PLAINTEXT, "The request was successful.\nYour data is: '" + data + "'");
+
+        var response = newFixedLengthResponse(Response.Status.OK, MIME_PLAINTEXT, "The request was successful.\nYour data is: '" + data + "'");
+        response = RouterUtils.allowCors(response, session);
+        return response;
       } catch (IOException | ResponseException e) {
         OutUtils.warningFormatWithDatetime("Invalid request for '%s' [%s].%n", session.getUri(), session.getMethod());
         return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
