@@ -56,12 +56,12 @@ public class App extends NanoHTTPD {//es un servidor web ligero (para proyectos 
   }
 
   public Response serve(IHTTPSession session) {
-    String uri = session.getUri();//Return the URI used to open the WebSocket connection
-    var file = (isFile.matcher(uri).matches() ? uri : uri + "index.html");//ver que el uri calce con el archivo
-    var fileStream = getClass().getClassLoader().getResourceAsStream(file.substring(1));//leer de un archivo, lee el carácter 1 para ver que exista el archivo
+    String uri = session.getUri();
+    var file = "web" + (isFile.matcher(uri).matches() ? uri : uri + "index.html");
+    var fileStream = getClass().getClassLoader().getResourceAsStream(file);
     if (fileStream != null) {
-      OutUtils.successFormatWithDatetime("Successful response to '%s' static file request [%s].%n", file, session.getMethod());//imprime las solicitudes de los archivos del browser
-      return newChunkedResponse(Status.OK, getMimeTypeForFile(file), fileStream);//Es una respuesa fraccionada para cuando la respuesta es muy grande
+      OutUtils.successFormatWithDatetime("Successful response to '%s' static file request [%s].%n", file, session.getMethod());
+      return newChunkedResponse(Status.OK, getMimeTypeForFile(file), fileStream);
     } else {
       OutUtils.warningFormatWithDatetime("Static file not found: '%s' [%s].%n", file, session.getMethod());//file not found. OutUtils=librería para salidas
       return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
