@@ -19,7 +19,7 @@ mvn exec:java -Dexec.mainClass="com.group03.App"
 
 ---
 
-**NOTA**: antes de empezar a ejecutar comandos se debe entrar a cualquiera de las dos carpetas de proyecto de _Maven_, las cuales son: _E-Nano2020 Router_ y _E-Nano2020 Static Server_, las cuales contiene un archivo `pom.xml`; esto dependiendo del proyecto que desee ejectuar. A continuación unos ejemplos:
+**NOTA**: antes de empezar a ejecutar comandos se debe entrar a cualquiera de las dos carpetas de proyecto de _Maven_, las cuales son: _E-Nano2020 Router_ y _E-Nano2020 Static Server_ y contienen un archivo `pom.xml`; esto dependiendo del proyecto que desee ejecutar. A continuación unos ejemplos:
 
 #### Raíz del repositorio - NO ingresar comandos de _Maven_ ahí.
 
@@ -91,8 +91,20 @@ El botón de arriba a la derecha que dice **About** sirve para ver los integrant
 La estructura del proyecto es la siguiente:
 
 ```tree
-.[root]
-└───E-Nano2020
+\ [root]
+├───E-Nano2020 Router
+│   └───src
+│       ├───main
+│       │   ├───java
+│       │   │   └───com
+│       │   │       └───group03
+│       │   │           └───utils
+│       │   └───resources
+│       └───test
+│           └───java
+│               └───com
+│                   └───group03
+└───E-Nano2020 Static Server
     └───src
         ├───main
         │   ├───java
@@ -100,14 +112,14 @@ La estructura del proyecto es la siguiente:
         │   │       └───group03
         │   │           └───utils
         │   └───resources
-        │       ├───css
-        │       ├───icon
-        │       ├───info
-        │       └───js
+        │       └───web
+        │           ├───css
+        │           ├───icon
+        │           └───js
         └───test
-          └───java
-            └───com
-              └───group03
+            └───java
+                └───com
+                    └───group03
 ```
 
 Los archivos web están en la carpeta `/E-Nano2020/src/main/resources`; el resto del proyecto se maneja de la forma estándar de Java.
