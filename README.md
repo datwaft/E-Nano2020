@@ -23,7 +23,7 @@ mvn exec:java -Dexec.mainClass="com.group03.App"
 
 #### Raíz del repositorio - NO ingresar comandos de _Maven_ ahí.
 
-![image](https://user-images.githubusercontent.com/37723586/93397727-69caa780-f837-11ea-9151-19fccf2a6396.png)
+![image](https://user-images.githubusercontent.com/37723586/94335309-00b20500-ff98-11ea-84c0-cb660f77f779.png)
 
 #### Raíz de los proyectos de Maven - SÍ ingresar comandos de _Maven_ ahí.
 
