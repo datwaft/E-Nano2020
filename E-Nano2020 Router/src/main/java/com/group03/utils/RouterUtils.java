@@ -40,16 +40,17 @@ public class RouterUtils {
   public static Response allowCors(Response response, IHTTPSession session) {
     var headers = session.getHeaders();
     var origin = "none";
-
+	
     var allowed = headers != null &&
       headers.get("sec-fetch-mode") != null &&
-      headers.get("set-fetch-site") != null &&
+      headers.get("sec-fetch-site") != null &&
       headers.get("sec-fetch-mode").equals("cors") &&
-      ALLOWED_SITES.indexOf(headers.get("sec-fetch-site")) >= 0 &&
+      ALLOWED_SITES.contains(headers.get("sec-fetch-site")) &&
       (origin = headers.get("origin")) != null;
 
-    if (allowed)
+    if (allowed) {
       response.addHeader("Access-Control-Allow-Origin", origin);
+    }
 
     return response;
   }

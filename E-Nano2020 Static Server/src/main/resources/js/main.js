@@ -26,22 +26,25 @@
 
 "use strict"
 
-var data = {
+let data = {
   input: "",
   output: "",
   info: ""
 }
 
-var app = new Vue({
+let app = new Vue({
   el: '#app',
   data: data,
   methods: {
     submit: async function () {
       try {
-        var response = await axios.post('http://localhost:8089/api', {
-          data: this.input
+        let response = await fetch('http://localhost:8099/api', {
+          method: 'POST',
+          body: JSON.stringify({
+            data: this.input
+          })
         })
-        this.output = response.data
+        this.output = (await response.json()).output
       } catch (err) {
         console.error(err)
       }
@@ -54,8 +57,8 @@ var app = new Vue({
     },
     getInfo: async function () {
       try {
-        var response = await axios.get('http://localhost:8089/info')
-        this.info = response.data
+        let response = await fetch('http://localhost:8099/info')
+        this.info = await response.json()
       } catch (err) {
         console.error(err)
       }

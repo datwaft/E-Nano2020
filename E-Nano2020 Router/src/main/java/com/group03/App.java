@@ -94,7 +94,9 @@ public class App extends RouterNanoHTTPD {
         return response;
       } catch (Exception e) {
         OutUtils.warningFormatWithDatetime("Invalid request for '%s' [%s].%n", session.getUri(), session.getMethod());
-        return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
+        var response = newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
+        response = RouterUtils.allowCors(response, session);
+        return response;
       }
     }
   }
@@ -114,6 +116,7 @@ public class App extends RouterNanoHTTPD {
     public InputStream getData() {
       return new ByteArrayInputStream("Your request was successful :D".getBytes());
     }
+
     @Override
     public Response post(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
       try {
@@ -130,12 +133,17 @@ public class App extends RouterNanoHTTPD {
         OutUtils.successFormatWithDatetime("Successful response to '%s' request [%s].", session.getUri(), session.getMethod());
         OutUtils.normalFormat("The data is: '%s'.%n", data);
 
-        var response = newFixedLengthResponse(Response.Status.OK, MIME_PLAINTEXT, "The request was successful.\nYour data is: '" + data + "'");
+        var output = new HashMap<String, String>();
+        output.put("output", String.format("The request was successful.%nYour data is: '%s'", data));
+
+        var response = newFixedLengthResponse(Response.Status.OK, "application/json", new JSONObject(output).toString());
         response = RouterUtils.allowCors(response, session);
         return response;
       } catch (IOException | ResponseException e) {
         OutUtils.warningFormatWithDatetime("Invalid request for '%s' [%s].%n", session.getUri(), session.getMethod());
-        return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
+        var response = newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
+        response = RouterUtils.allowCors(response, session);
+        return response;
       }
     }
   }
