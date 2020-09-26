@@ -19,15 +19,21 @@ mvn exec:java -Dexec.mainClass="com.group03.App"
 
 ---
 
-**NOTA**: antes de empezar a ejecutar comandos se debe entrar a la carpeta E-Nano2020, la cual contiene un archivo `pom.xml`. A continuación unos ejemplos:
+**NOTA**: antes de empezar a ejecutar comandos se debe entrar a cualquiera de las dos carpetas de proyecto de _Maven_, las cuales son: _E-Nano2020 Router_ y _E-Nano2020 Static Server_, las cuales contiene un archivo `pom.xml`; esto dependiendo del proyecto que desee ejectuar. A continuación unos ejemplos:
 
 #### Raíz del repositorio - NO ingresar comandos de _Maven_ ahí.
 
 ![image](https://user-images.githubusercontent.com/37723586/93397727-69caa780-f837-11ea-9151-19fccf2a6396.png)
 
-#### Raíz del proyecto de Maven - SÍ ingresar comandos de _Maven_ ahí.
+#### Raíz de los proyectos de Maven - SÍ ingresar comandos de _Maven_ ahí.
 
-![image](https://user-images.githubusercontent.com/37723586/93397862-b1513380-f837-11ea-9854-b80f633279b8.png)
+#### _E-Nano2020 Router_
+
+![image](https://user-images.githubusercontent.com/37723586/94331775-7c0db980-ff8c-11ea-8237-8442f112bba6.png)
+
+#### _E-Nano2020 Static Server_
+
+![image](https://user-images.githubusercontent.com/37723586/94331785-8af46c00-ff8c-11ea-85cd-74f54244763d.png)
 
 ### Compilación
 
@@ -70,7 +76,7 @@ La url para la conexión debe aparecer en la consola una vez se inició el servi
 
 Una vez entró a la url le debe salir una pantalla similar a la siguiente:
 
-![image](https://user-images.githubusercontent.com/37723586/93396746-62a29a00-f835-11ea-9be5-73793b03ba4e.png)
+![image](https://user-images.githubusercontent.com/37723586/94331792-a1022c80-ff8c-11ea-84ea-960a4e2222a3.png)
 
 ~~En el recuadro negro de la derecha puede introducir el código E-Nano a ejecutar, y en el derecha se producirá el resultado de la ejecución del código después de usted apretar el botón verde **Submit**.~~
 
