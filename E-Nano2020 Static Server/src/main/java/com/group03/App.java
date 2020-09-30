@@ -21,24 +21,25 @@
  *   117540697
  * Group: 03
  * Schedule: 10am
- * Date of modification: 2020-09-16
+ * Date of modification: 2020-09-30
  */
 
 package com.group03;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.Map;
 import java.util.regex.Pattern;
 
-import com.group03.utils.MiscUtils;
+import com.group03.utils.FileUtils;
 import com.group03.utils.OutUtils;
 
 import fi.iki.elonen.NanoHTTPD;
 import fi.iki.elonen.NanoHTTPD.Response.Status;//status de la respuesta del servidor
   
-public class App extends NanoHTTPD {//es un servidor web ligero (para proyectos pequeños) y de código abierto escrito en Java.
+public class App extends NanoHTTPD { // es un servidor web ligero (para proyectos pequeños) y de código abierto escrito en Java.
   private static Pattern isFile = Pattern.compile("^.*[^/]$");
-  private static final Integer port = 8088;//puerto de la aplicación, se puede cambiar
+  private static final Map<String, String> properties = FileUtils.readProperties("server.properties");
+  private static final Integer port = Integer.valueOf(properties.get("port"));
 
   public App() throws IOException {
     super(port);

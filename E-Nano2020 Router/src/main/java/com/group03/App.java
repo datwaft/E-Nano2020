@@ -21,7 +21,7 @@
  *   117540697
  * Group: 03
  * Schedule: 10am
- * Date of modification: 2020-09-25
+ * Date of modification: 2020-09-30
  */
 
 package com.group03;
@@ -35,6 +35,7 @@ import java.util.Map;
 import com.group03.utils.MiscUtils;
 import com.group03.utils.OutUtils;
 import com.group03.utils.RouterUtils;
+import com.group03.utils.FileUtils;
 
 import org.json.JSONObject;
 
@@ -42,7 +43,8 @@ import fi.iki.elonen.NanoHTTPD.Response.IStatus;
 import fi.iki.elonen.router.RouterNanoHTTPD;
   
 public class App extends RouterNanoHTTPD {
-  private static final Integer port = 8099;
+  private static final Map<String, String> properties = FileUtils.readProperties("server.properties");
+  private static final Integer port = Integer.valueOf(properties.get("port"));
 
   public App() throws IOException {
     super(port);
