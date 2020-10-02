@@ -66,10 +66,10 @@ public class CompileUtils {
 
     for (var diagnostic : diagnostics.getDiagnostics()) {
       var pos = diagnostic.getLineNumber();
-      var location = pos >= 0 ? String.format("line %d", pos) : "unavailable";
-      var message = String.format("%s in %s.%n",
-        diagnostic.getMessage(locale),
-        location
+      var location = pos >= 0 ? String.format("Line %d", pos) : "Unavailable";
+      var message = String.format("%s: %s.%n",
+        location,
+        diagnostic.getMessage(locale)
       );
       switch(diagnostic.getKind()) {
         case ERROR:
