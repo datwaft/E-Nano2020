@@ -86,8 +86,7 @@ public class App extends RouterNanoHTTPD {
     @Override
     public Response get(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
       try {
-        var infoStream = getClass().getClassLoader().getResourceAsStream("info.json");
-        var info = MiscUtils.inputStreamToString(infoStream);
+        var info = FileUtils.readString("info.json");
 
         OutUtils.successFormatWithDatetime("Successful response to '%s' request [%s].%n", session.getUri(), session.getMethod());
 
