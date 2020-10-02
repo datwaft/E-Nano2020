@@ -47,7 +47,7 @@ Algunos parametros de los servidores se pueden configurar, esto se hace modifica
 port=8080
 ```
 
-Esto haría que el server use el puerto 8080.
+Esto haría que el server use el puerto `8080`.
 
 ### Compilación
 
