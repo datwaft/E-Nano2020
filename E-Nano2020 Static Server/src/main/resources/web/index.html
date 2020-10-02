@@ -143,18 +143,18 @@
       </div>
     </b-sidebar>
     <b-container fluid>
-      <b-row class=" min-height-460 mg-2">
+      <b-row class="min-height-460 mg-2">
         <b-col>
           <prism-editor
-            class="editor"
+            class="editor max-height-460 p-3"
             v-model="input"
-            :highlight="highlightInput"
-            line-numbers>
+            line-numbers
+            :highlight="highlightInput">
           </prism-editor>
         </b-col>
         <b-col>
           <prism-editor
-            class="editor"
+            class="editor max-height-460 p-3"
             v-model="output"
             :readonly="true"
             :highlight="highlightOutput">
@@ -164,15 +164,15 @@
       <b-row>
         <b-col class="text-center">
           <b-button squared variant="light" @click="cleanInput">
-            <i class="fa fa-broom"></i> Clean
+            <i class="fa fa-broom"></i> Clear
           </b-button>
           <b-button squared variant="success" @click="submit">
-            <i class="fas fa-play"></i> Submit
+            <i class="far fa-paper-plane"></i> Send
           </b-button>
         </b-col>
         <b-col class="text-center">
           <b-button squared variant="light" @click="cleanOutput">
-            <i class="fa fa-broom"></i> Clean
+            <i class="fa fa-broom"></i> Clear
           </b-button>
         </b-col>
       </b-row>
