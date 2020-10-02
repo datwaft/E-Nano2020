@@ -74,3 +74,7 @@ pre {
   width: 10px;
   height: 10px;
 }
+
+.prism-editor__textarea:focus {
+outline: none;
+}
