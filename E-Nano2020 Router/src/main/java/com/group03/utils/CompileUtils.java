@@ -57,11 +57,13 @@ public class CompileUtils {
     var success = task.call();
 
     if (success) {
-      OutUtils.successFormatWithDatetime("The code compiled successfully.%n");
-      output.append("The code compiled successfully.\n\n");
+      var message = String.format("The code compiled successfully.%n");
+      OutUtils.successFormatWithDatetime(message);
+      output.append(String.format("<span style=\"color: green\">%s</span>%n", message));
     } else {
-      OutUtils.errorFormatWithDatetime("The code didn't compile successfully.%n");
-      output.append("The code didn't compile successfully.\n\n");
+      var message = String.format("The code didn't compile successfully.%n");
+      OutUtils.errorFormatWithDatetime(message);
+      output.append(String.format("<span style=\"color: red\">%s</span>%n", message));
     }
 
     for (var diagnostic : diagnostics.getDiagnostics()) {
@@ -74,17 +76,19 @@ public class CompileUtils {
       switch(diagnostic.getKind()) {
         case ERROR:
           OutUtils.errorFormat(message);
+          output.append(String.format("<span style=\"color: red\">%s</span>", message));
           break;
         case MANDATORY_WARNING:
         case WARNING:
+          output.append(String.format("<span style=\"color: yellow\">%s</span>", message));
           OutUtils.warningFormat(message);
           break;
         case NOTE:
         case OTHER:
+          output.append(String.format("<span style=\"color: white\">%s</span>", message));
           OutUtils.normalFormat(message);
           break;
       }
-      output.append(message);
     }
     return output.toString();
   }

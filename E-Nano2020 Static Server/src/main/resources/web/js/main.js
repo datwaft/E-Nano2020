@@ -66,7 +66,10 @@ let app = new Vue({
     cleanInfo: function () {
       this.info = ""
     },
-    highlighter: function (code) {
+    highlightInput: function (code) {
+      return Prism.highlight(code, Prism.languages.java, "java");
+    },
+    highlightOutput: function (code) {
       return code;
     }
   }

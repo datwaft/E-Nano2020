@@ -96,8 +96,12 @@
     <!-- +------------------------------------------------------------------------------------+ --> 
     <!-- |                                  Prism Editor Vue                                  | --> 
     <!-- +------------------------------------------------------------------------------------+ --> 
-    <script src="https://unpkg.com/vue-prism-editor"></script>
     <link rel="stylesheet" href="https://unpkg.com/vue-prism-editor/dist/prismeditor.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/prismjs/themes/prism-tomorrow.css" />
+    <script src="https://unpkg.com/vue-prism-editor"></script>
+    <script src="https://unpkg.com/prismjs/components/prism-core.min.js"></script>
+    <script src="https://unpkg.com/prismjs/components/prism-clike.min.js"></script>
+    <script src="https://unpkg.com/prismjs/components/prism-java.min.js"></script>
 </head>
 <!-- ╔════════════════════════════════════════════════════════════════════════════════════════╗ --> 
 <!-- ║                                          Body                                          ║ --> 
@@ -141,10 +145,20 @@
     <b-container fluid>
       <b-row class=" min-height-460 mg-2">
         <b-col>
-          <prism-editor class="editor" v-model="input" :highlight="highlighter" line-numbers></prism-editor>
+          <prism-editor
+            class="editor"
+            v-model="input"
+            :highlight="highlightInput"
+            line-numbers>
+          </prism-editor>
         </b-col>
         <b-col>
-          <prism-editor class="editor" v-model="output" :readonly="true" :highlight="highlighter"></prism-editor>
+          <prism-editor
+            class="editor"
+            v-model="output"
+            :readonly="true"
+            :highlight="highlightOutput">
+          </prism-editor>
         </b-col>
       </b-row>
       <b-row>
