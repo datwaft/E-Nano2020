@@ -35,6 +35,20 @@ mvn exec:java -Dexec.mainClass="com.group03.App"
 
 ![image](https://user-images.githubusercontent.com/37723586/94331785-8af46c00-ff8c-11ea-85cd-74f54244763d.png)
 
+### Configuración
+
+Algunos parametros de los servidores se pueden configurar, esto se hace modificando el archivo `server.properties` dentro de `/resources` del servidor (e.g. `/E-Nano2020 Router/src/main/resources/server.properties`).
+
+#### Port
+
+**Ejemplo:**
+
+```properties
+port=8080
+```
+
+Esto usaría el puerto 8080.
+
 ### Compilación
 
 Para compilar se usa el comando:
@@ -73,8 +87,6 @@ Una vez se terminó de iniciar el servidor va a aparecer una pantalla similar a 
 ### Conexión desde el navegador
 
 La url para la conexión debe aparecer en la consola una vez se inició el servidor, pero la por defecto es la siguiente: `http://localhost:8088/`.
-
-El puerto se puede cambiar en un archivo dentro de la carpeta `/resources` llamado `server.properties`, no necesita recompilar.
 
 Una vez entró a la url le debe salir una pantalla similar a la siguiente:
 
