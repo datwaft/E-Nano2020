@@ -29,7 +29,6 @@ package com.group03.utils;
 import java.net.URI;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
@@ -37,8 +36,6 @@ import javax.tools.SimpleJavaFileObject;
 import javax.tools.ToolProvider;
 
 public class CompileUtils {
-  private static Pattern class_name = Pattern.compile(".*", Pattern.MULTILINE);
-
   private static Locale locale = null;
 
   public static String compileString(String to_compile) {
@@ -47,14 +44,7 @@ public class CompileUtils {
     var compiler = ToolProvider.getSystemJavaCompiler();
     var diagnostics = new DiagnosticCollector<JavaFileObject>();
 
-    var matcher = class_name.matcher(to_compile);
-    System.out.println(matcher);
-    var file_name = "";
-    if (matcher.matches()) {
-      file_name = matcher.group(1);
-    }
-
-    var file = new JavaSourceFromString(file_name, to_compile);
+    var file = new JavaSourceFromString("", to_compile);
     var compilation_utils = List.of(file);
     var task = compiler.getTask(
       null,
@@ -76,11 +66,10 @@ public class CompileUtils {
 
     for (var diagnostic : diagnostics.getDiagnostics()) {
       var pos = diagnostic.getLineNumber();
-      var location = pos >= 0 ? String.format("Line %d:", pos) : "Unavailable:";
-      var message = String.format("%s %s in source '%s'%n",
-        location,
+      var location = pos >= 0 ? String.format("line %d", pos) : "unavailable";
+      var message = String.format("%s in %s.%n",
         diagnostic.getMessage(locale),
-        diagnostic.getSource().getName().substring(1)
+        location
       );
       switch(diagnostic.getKind()) {
         case ERROR:
