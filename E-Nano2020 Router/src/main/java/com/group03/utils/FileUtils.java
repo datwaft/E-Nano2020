@@ -21,11 +21,12 @@
  *   117540697
  * Group: 03
  * Schedule: 10am
- * Date of modification: 2020-09-30
+ * Date of modification: 2020-10-01
  */
 
 package com.group03.utils;
 
+import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -33,6 +34,27 @@ import java.util.stream.Collectors;
 public class FileUtils {
 
   private FileUtils() { }
+
+  public static String readString(String filename) {
+    try {
+      var stream = FileUtils.class.getClassLoader().getResourceAsStream(filename);
+      var string = MiscUtils.inputStreamToString(stream);
+      return string;
+    } catch(Exception ex) {
+      OutUtils.errorFormatWithDatetime("File '%s' failed to load.", filename);
+      return null;
+    }
+  }
+
+  public static InputStream readInputStream(String filename) {
+    try {
+      var stream = FileUtils.class.getClassLoader().getResourceAsStream(filename);
+      return stream;
+    } catch(Exception ex) {
+      OutUtils.errorFormatWithDatetime("File '%s' failed to load.", filename);
+      return null;
+    }
+  }
 
   public static Map<String, String> readProperties(String filename) {
     Properties properties = new Properties();
@@ -44,7 +66,7 @@ public class FileUtils {
         Collectors.toMap(e -> e.getKey().toString(), e -> e.getValue().toString())
       );
     } catch(Exception ex) {
-      OutUtils.errorFormatWithDatetime("File %s failed to load.", filename);
+      OutUtils.errorFormatWithDatetime("File '%s' failed to load.", filename);
       return null;
     }
   }

@@ -32,9 +32,9 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.group03.utils.MiscUtils;
 import com.group03.utils.OutUtils;
 import com.group03.utils.RouterUtils;
+import com.group03.utils.CompileUtils;
 import com.group03.utils.FileUtils;
 
 import org.json.JSONObject;
@@ -86,8 +86,7 @@ public class App extends RouterNanoHTTPD {
     @Override
     public Response get(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
       try {
-        var infoStream = getClass().getClassLoader().getResourceAsStream("info.json");
-        var info = MiscUtils.inputStreamToString(infoStream);
+        var info = FileUtils.readString("info.json");
 
         OutUtils.successFormatWithDatetime("Successful response to '%s' request [%s].%n", session.getUri(), session.getMethod());
 
@@ -132,11 +131,11 @@ public class App extends RouterNanoHTTPD {
           data = jsonData.getString("data");
         }
 
+        var output = new HashMap<String, String>();
+        output.put("output", CompileUtils.compileString(data));
+
         OutUtils.successFormatWithDatetime("Successful response to '%s' request [%s].", session.getUri(), session.getMethod());
         OutUtils.normalFormat("The data is: '%s'.%n", data);
-
-        var output = new HashMap<String, String>();
-        output.put("output", String.format("The request was successful.%nYour data is: '%s'", data));
 
         var response = newFixedLengthResponse(Response.Status.OK, "application/json", new JSONObject(output).toString());
         response = RouterUtils.allowCors(response, session);
