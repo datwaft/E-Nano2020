@@ -74,6 +74,8 @@ Una vez se terminó de iniciar el servidor va a aparecer una pantalla similar a 
 
 La url para la conexión debe aparecer en la consola una vez se inició el servidor, pero la por defecto es la siguiente: `http://localhost:8088/`.
 
+El puerto se puede cambiar en un archivo dentro de la carpeta `/resources` llamado `server.properties`, no necesita recompilar.
+
 Una vez entró a la url le debe salir una pantalla similar a la siguiente:
 
 ![image](https://user-images.githubusercontent.com/37723586/94331792-a1022c80-ff8c-11ea-84ea-960a4e2222a3.png)
