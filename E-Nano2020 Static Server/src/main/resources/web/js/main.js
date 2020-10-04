@@ -53,10 +53,42 @@ let app = new Vue({
       }
     },
     cleanInput: function () {
-      this.input = ""
+      this.$bvModal.msgBoxConfirm('You want to clean input area?', {
+        title: 'Warning',
+        size: 'sm',
+        buttonSize: 'sm',
+        okVariant: 'danger',
+        okTitle: 'Confirm',
+        cancelTitle: 'Cancel',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      }).then(value => {
+        if(value){
+          this.input = ""
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     cleanOutput: function () {
-      this.output = ""
+      this.$bvModal.msgBoxConfirm('You want to clean output area?', {
+        title: 'Warning',
+        size: 'sm',
+        buttonSize: 'sm',
+        okVariant: 'danger',
+        okTitle: 'Confirm',
+        cancelTitle: 'Cancel',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      }).then(value => {
+        if(value){
+          this.output = ""
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     getInfo: async function () {
       try {
