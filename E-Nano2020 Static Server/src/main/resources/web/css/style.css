@@ -21,7 +21,7 @@
  *   117540697
  * Group: 03
  * Schedule: 10am
- * Date of modification: 2020-09-16
+ * Date of modification: 2020-10-04
  */
 
 html body{
@@ -81,4 +81,20 @@ pre {
 
 .prism-editor__textarea:focus {
 outline: none;
+}
+
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+::-webkit-scrollbar-track {
+  background: #4a4949;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(105, 105, 105);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(173, 173, 173);
 }

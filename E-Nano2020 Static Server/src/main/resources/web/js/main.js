@@ -21,7 +21,7 @@
  *   117540697
  * Group: 03
  * Schedule: 10am
- * Date of modification: 2020-09-16
+ * Date of modification: 2020-10-04
  */
 
 "use strict"
@@ -38,6 +38,8 @@ let app = new Vue({
   methods: {
     submit: async function () {
       try {
+        var btn = document.getElementById('btn-send');
+        btn.disabled = true;
         let response = await fetch('http://localhost:8099/api', {
           method: 'POST',
           body: JSON.stringify({
@@ -45,6 +47,7 @@ let app = new Vue({
           })
         })
         this.output = (await response.json()).output
+        btn.disabled = false;
       } catch (err) {
         console.error(err)
       }
