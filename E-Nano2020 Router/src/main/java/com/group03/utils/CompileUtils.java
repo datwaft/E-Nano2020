@@ -29,6 +29,7 @@ package com.group03.utils;
 import java.net.URI;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
@@ -37,6 +38,7 @@ import javax.tools.ToolProvider;
 
 public class CompileUtils {
   private static Locale locale = null;
+  private static Pattern class_name = Pattern.compile("public\\s+class\\s+(\\S+)\\s*\\{");
 
   public static String compileString(String to_compile) {
     var output = new StringBuilder();
@@ -44,7 +46,13 @@ public class CompileUtils {
     var compiler = ToolProvider.getSystemJavaCompiler();
     var diagnostics = new DiagnosticCollector<JavaFileObject>();
 
-    var file = new JavaSourceFromString("", to_compile);
+    var file_name = "";
+    var matcher = class_name.matcher(to_compile);
+    if (matcher.find()) {
+      file_name = matcher.group(1);
+    }
+
+    var file = new JavaSourceFromString(file_name, to_compile);
     var compilation_utils = List.of(file);
     var task = compiler.getTask(
       null,
