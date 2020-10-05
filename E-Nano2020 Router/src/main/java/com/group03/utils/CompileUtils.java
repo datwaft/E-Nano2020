@@ -21,99 +21,55 @@
  *   117540697
  * Group: 03
  * Schedule: 10am
- * Date of modification: 2020-10-01
+ * Date of modification: 2020-10-04
  */
 
 package com.group03.utils;
 
-import java.net.URI;
-import java.util.List;
-import java.util.Locale;
+import com.group03.compiler.Compiler;
+
+import java.io.IOException;
 import java.util.regex.Pattern;
 
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaFileObject;
-import javax.tools.SimpleJavaFileObject;
-import javax.tools.ToolProvider;
-
 public class CompileUtils {
-  private static Locale locale = null;
-  private static Pattern class_name = Pattern.compile("public\\s+class\\s+(\\S+)\\s*\\{");
+  private static Pattern class_name = Pattern.compile("class\\s+(\\S+)\\s*\\{");
 
-  public static String compileString(String to_compile) {
+  public static String compileString(String source) {
     var output = new StringBuilder();
 
-    var compiler = ToolProvider.getSystemJavaCompiler();
-    var diagnostics = new DiagnosticCollector<JavaFileObject>();
-
     var file_name = "";
-    var matcher = class_name.matcher(to_compile);
+    var matcher = class_name.matcher(source);
     if (matcher.find()) {
       file_name = matcher.group(1);
     }
 
-    var file = new JavaSourceFromString(file_name, to_compile);
-    var compilation_utils = List.of(file);
-    var task = compiler.getTask(
-      null,
-      null,
-      diagnostics,
-      null,
-      null,
-      compilation_utils
-    );
-    var success = task.call();
-
-    if (success) {
-      var message = String.format("The code compiled successfully.%n");
-      OutUtils.successFormatWithDatetime(message);
-      output.append(String.format("<span style=\"color: green\">%s</span>%n", message));
-    } else {
-      var message = String.format("The code didn't compile successfully.%n");
-      OutUtils.errorFormatWithDatetime(message);
-      output.append(String.format("<span style=\"color: red\">%s</span>%n", message));
+    var compiler = new Compiler();
+    Class<?> compiled_class = null;
+    try {
+      compiled_class = compiler.compile(source, file_name);
+    } catch(IOException | ClassNotFoundException ex) {
+      OutUtils.errorFormatWithDatetime("Compilation failed with error:%n%s%n", ex);
     }
 
-    for (var diagnostic : diagnostics.getDiagnostics()) {
-      var pos = diagnostic.getLineNumber();
-      var location = pos >= 0 ? String.format("Line %d", pos) : "Unavailable";
-      var message = String.format("%s: %s.%n",
-        location,
-        diagnostic.getMessage(locale)
-      );
-      switch(diagnostic.getKind()) {
-        case ERROR:
-          OutUtils.errorFormat(message);
-          output.append(String.format("<span style=\"color: red\">%s</span>", message));
+    for (var pair : compiler.getOutput()) {
+      switch(pair.getKey()) {
+        case "SUCCESS":
+          output.append(String.format("<span style=\"color: green\">%s</span>%n", pair.getValue()));
           break;
-        case MANDATORY_WARNING:
-        case WARNING:
-          output.append(String.format("<span style=\"color: yellow\">%s</span>", message));
-          OutUtils.warningFormat(message);
+        case "ERROR":
+          output.append(String.format("<span style=\"color: red\">%s</span>", pair.getValue()));
           break;
-        case NOTE:
-        case OTHER:
-          output.append(String.format("<span style=\"color: white\">%s</span>", message));
-          OutUtils.normalFormat(message);
+        case "MANDATORY_WARNING":
+        case "WARNING":
+          output.append(String.format("<span style=\"color: yellow\">%s</span>", pair.getValue()));
+          break;
+        case "NOTE":
+        case "OTHER":
+          output.append(String.format("<span style=\"color: white\">%s</span>", pair.getValue()));
           break;
       }
     }
     return output.toString();
-  }
-
-  private static class JavaSourceFromString extends SimpleJavaFileObject {
-    final String code;
-
-    JavaSourceFromString(String name, String code) {
-      super(URI.create(String.format("string:///%s%s", name.replace('.', '/'), Kind.SOURCE.extension)), Kind.SOURCE);
-      this.code = code;
-    }
-
-    @Override
-    public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-      return code;
-    }
-
   }
 
 }

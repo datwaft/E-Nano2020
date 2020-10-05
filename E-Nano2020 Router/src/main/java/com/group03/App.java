@@ -135,7 +135,7 @@ public class App extends RouterNanoHTTPD {
         output.put("output", CompileUtils.compileString(data));
 
         OutUtils.successFormatWithDatetime("Successful response to '%s' request [%s].", session.getUri(), session.getMethod());
-        OutUtils.normalFormat("The data is: '%s'.%n", data);
+        OutUtils.normalFormat("The source code is:%n%s%n", data);
 
         var response = newFixedLengthResponse(Response.Status.OK, "application/json", new JSONObject(output).toString());
         response = RouterUtils.allowCors(response, session);
