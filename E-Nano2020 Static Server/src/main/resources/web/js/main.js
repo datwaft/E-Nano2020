@@ -94,6 +94,7 @@ let app = new Vue({
       try {
         let response = await fetch('http://localhost:8099/info')
         this.info = await response.json()
+        console.log(this.info)
       } catch (err) {
         console.error(err)
       }
