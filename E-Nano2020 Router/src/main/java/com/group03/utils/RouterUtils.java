@@ -26,10 +26,15 @@
 
 package com.group03.utils;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+
+import org.json.JSONObject;
 
 import fi.iki.elonen.NanoHTTPD.IHTTPSession;
 import fi.iki.elonen.NanoHTTPD.Response;
+import fi.iki.elonen.NanoHTTPD.ResponseException;
 
 public class RouterUtils {
   
@@ -53,6 +58,14 @@ public class RouterUtils {
     }
 
     return response;
+  }
+
+  public static JSONObject processData(IHTTPSession session) throws IOException, ResponseException {
+    var session_body = new HashMap<String, String>();
+    session.parseBody(session_body);
+    var post_data = session_body.get("postData");
+    if (post_data == null) return null;
+    return new JSONObject(post_data);
   }
 
 }
