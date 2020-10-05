@@ -28,7 +28,6 @@ package com.group03.compiler;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,9 +37,11 @@ import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 
+import org.javatuples.Pair;
+
 public class Compiler {
   private ClassLoader class_loader = Compiler.class.getClassLoader();
-  private List<AbstractMap.SimpleEntry<String, String>> output = new ArrayList<>();
+  private List<Pair<String, String>> output = new ArrayList<>();
 
   public void setClassLoader(ClassLoader class_loader) {
     this.class_loader = class_loader;
@@ -70,9 +71,9 @@ public class Compiler {
 		var success = task.call();
 
     if (success) {
-      output.add(new AbstractMap.SimpleEntry<>("SUCCESS", "The code compiled successfully.\n"));
+      output.add(new Pair<>("SUCCESS", "The code compiled successfully.\n"));
     } else {
-      output.add(new AbstractMap.SimpleEntry<>("ERROR", "The code compiled with errors.\n"));
+      output.add(new Pair<>("ERROR", "The code compiled with errors.\n"));
     }
 
     for (var diagnostic : diagnostics.getDiagnostics()) {
@@ -82,7 +83,7 @@ public class Compiler {
         location,
         diagnostic.getMessage(null)
       );
-      output.add(new AbstractMap.SimpleEntry<>(
+      output.add(new Pair<>(
         diagnostic.getKind().toString(),
         message
       ));
@@ -106,7 +107,7 @@ public class Compiler {
     return result;
   }
 
-  public List<AbstractMap.SimpleEntry<String, String>> getOutput() {
+  public List<Pair<String, String>> getOutput() {
     return output;
   }
 }
