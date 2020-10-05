@@ -166,7 +166,7 @@
           <b-button squared variant="light" @click="cleanInput">
             <i class="fa fa-broom"></i> Clear
           </b-button>
-          <b-button squared variant="success" @click="submit" id="btn-send">
+          <b-button squared variant="success" @click="submit" :disabled="btn_disabled">
             <i class="far fa-paper-plane"></i> Send
           </b-button>
         </b-col>
@@ -177,6 +177,20 @@
         </b-col>
       </b-row>
     </b-containe>
+    <b-modal
+      title="Warning"
+      size="sm"
+      button-size="sm"
+      ok-variant="danger"
+      ok-title="Confirm"
+      cancel-title="Cancel"
+      foorter-class="p-2"
+      :hide-header-close="false"
+      centered
+      v-model="show_confirm"
+      @ok="clean">
+      Do you want to clean the {{ mode_confirm }} area?
+    </b-modal>
   </div>
 </body>
 <!-- ╔════════════════════════════════════════════════════════════════════════════════════════╗ --> 

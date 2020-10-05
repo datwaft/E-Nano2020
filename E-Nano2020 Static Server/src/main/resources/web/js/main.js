@@ -29,7 +29,12 @@
 let data = {
   input: "",
   output: "",
-  info: ""
+  info: "",
+
+  btn_disabled: false,
+
+  mode_confirm: null,
+  show_confirm: false
 }
 
 let app = new Vue({
@@ -38,8 +43,7 @@ let app = new Vue({
   methods: {
     submit: async function () {
       try {
-        var btn = document.getElementById('btn-send');
-        btn.disabled = true;
+        this.btn_disabled = true
         let response = await fetch('http://localhost:8099/api', {
           method: 'POST',
           body: JSON.stringify({
@@ -47,48 +51,24 @@ let app = new Vue({
           })
         })
         this.output = (await response.json()).output
-        btn.disabled = false;
+        this.btn_disabled = false
       } catch (err) {
         console.error(err)
+        this.btn_disabled = false
       }
     },
     cleanInput: function () {
-      this.$bvModal.msgBoxConfirm('You want to clean input area?', {
-        title: 'Warning',
-        size: 'sm',
-        buttonSize: 'sm',
-        okVariant: 'danger',
-        okTitle: 'Confirm',
-        cancelTitle: 'Cancel',
-        footerClass: 'p-2',
-        hideHeaderClose: false,
-        centered: true
-      }).then(value => {
-        if(value){
-          this.input = ""
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+      this.mode_confirm = "input"
+      this.show_confirm = true
     },
     cleanOutput: function () {
-      this.$bvModal.msgBoxConfirm('You want to clean output area?', {
-        title: 'Warning',
-        size: 'sm',
-        buttonSize: 'sm',
-        okVariant: 'danger',
-        okTitle: 'Confirm',
-        cancelTitle: 'Cancel',
-        footerClass: 'p-2',
-        hideHeaderClose: false,
-        centered: true
-      }).then(value => {
-        if(value){
-          this.output = ""
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+      this.mode_confirm = "output"
+      this.show_confirm = true
+    },
+    clean: function () {
+      this[this.mode_confirm] = ""
+      this.mode_confirm = null
+      this.show_confirm = false
     },
     getInfo: async function () {
       try {
