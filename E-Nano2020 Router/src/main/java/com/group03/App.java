@@ -121,15 +121,8 @@ public class App extends RouterNanoHTTPD {
     @Override
     public Response post(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
       try {
-        var session_body = new HashMap<String, String>();
-        session.parseBody(session_body);
-
-        var post_data = session_body.get("postData");
-        var data = "";
-        if (post_data != null) {
-          var jsonData = new JSONObject(post_data);
-          data = jsonData.getString("data");
-        }
+        var post_data = RouterUtils.processData(session);
+        var data = post_data.getString("data");
 
         var output = new HashMap<String, String>();
         output.put("output", CompileUtils.compileString(data));
