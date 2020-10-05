@@ -47,25 +47,23 @@ public class CompileUtils {
     Class<?> compiled_class = null;
     try {
       compiled_class = compiler.compile(source, file_name);
-    } catch(IOException | ClassNotFoundException ex) {
-      OutUtils.errorFormatWithDatetime("Compilation failed with error:%n%s%n", ex);
-    }
+    } catch(IOException | ClassNotFoundException ex) { }
 
     for (var pair : compiler.getOutput()) {
-      switch(pair.getKey()) {
+      switch(pair.getValue0()) {
         case "SUCCESS":
-          output.append(String.format("<span style=\"color: green\">%s</span>%n", pair.getValue()));
+          output.append(String.format("<span style=\"color: green\">%s</span>%n", pair.getValue1()));
           break;
         case "ERROR":
-          output.append(String.format("<span style=\"color: red\">%s</span>", pair.getValue()));
+          output.append(String.format("<span style=\"color: red\">%s</span>", pair.getValue1()));
           break;
         case "MANDATORY_WARNING":
         case "WARNING":
-          output.append(String.format("<span style=\"color: yellow\">%s</span>", pair.getValue()));
+          output.append(String.format("<span style=\"color: yellow\">%s</span>", pair.getValue1()));
           break;
         case "NOTE":
         case "OTHER":
-          output.append(String.format("<span style=\"color: white\">%s</span>", pair.getValue()));
+          output.append(String.format("<span style=\"color: white\">%s</span>", pair.getValue1()));
           break;
       }
     }
