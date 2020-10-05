@@ -21,7 +21,7 @@
  *   117540697
  * Group: 03
  * Schedule: 10am
- * Date of modification: 2020-09-16
+ * Date of modification: 2020-10-04
  */
 
 "use strict"
@@ -38,6 +38,8 @@ let app = new Vue({
   methods: {
     submit: async function () {
       try {
+        var btn = document.getElementById('btn-send');
+        btn.disabled = true;
         let response = await fetch('http://localhost:8099/api', {
           method: 'POST',
           body: JSON.stringify({
@@ -45,15 +47,48 @@ let app = new Vue({
           })
         })
         this.output = (await response.json()).output
+        btn.disabled = false;
       } catch (err) {
         console.error(err)
       }
     },
     cleanInput: function () {
-      this.input = ""
+      this.$bvModal.msgBoxConfirm('You want to clean input area?', {
+        title: 'Warning',
+        size: 'sm',
+        buttonSize: 'sm',
+        okVariant: 'danger',
+        okTitle: 'Confirm',
+        cancelTitle: 'Cancel',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      }).then(value => {
+        if(value){
+          this.input = ""
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     cleanOutput: function () {
-      this.output = ""
+      this.$bvModal.msgBoxConfirm('You want to clean output area?', {
+        title: 'Warning',
+        size: 'sm',
+        buttonSize: 'sm',
+        okVariant: 'danger',
+        okTitle: 'Confirm',
+        cancelTitle: 'Cancel',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      }).then(value => {
+        if(value){
+          this.output = ""
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     },
     getInfo: async function () {
       try {

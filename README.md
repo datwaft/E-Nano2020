@@ -35,6 +35,20 @@ mvn exec:java -Dexec.mainClass="com.group03.App"
 
 ![image](https://user-images.githubusercontent.com/37723586/94331785-8af46c00-ff8c-11ea-85cd-74f54244763d.png)
 
+### Configuración
+
+Algunos parametros de los servidores se pueden configurar, esto se hace modificando el archivo `server.properties` dentro de `/resources` del servidor (e.g. `/E-Nano2020 Router/src/main/resources/server.properties`).
+
+#### Port
+
+**Ejemplo:**
+
+```properties
+port=8080
+```
+
+Esto haría que el server use el puerto `8080`.
+
 ### Compilación
 
 Para compilar se usa el comando:
