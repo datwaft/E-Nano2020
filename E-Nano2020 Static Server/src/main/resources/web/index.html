@@ -113,14 +113,16 @@
       <div class="font-size-30 color-white"><i class="fab fa-etsy"></i>-Nano 2020</div>
       <template>
         <div class="ml-auto">
-          <b-button v-b-toggle.about @click="getInfo" variant="dark">
-            <i class="fas fa-info-circle"></i> About 
+          <b-button @click="getInfo" :variant="info_status" :disabled="info_disabled">
+            <i class="fa" :class="info_class" v-if="!info_disabled"></i>
+            <b-spinner small v-else></b-spinner>
+            About
           </b-button>
         </div>
       </template>      
     </nav>
     <!-- Modal About-->
-    <b-sidebar id="about" bg-variant="dark" text-variant="light" right shadow title="About" busy>
+    <b-sidebar id="about" bg-variant="dark" text-variant="light" right shadow title="About" v-model="info_show" busy>
       <div class="px-3 py-2">
         <template v-if="info">
           <h5>Project</h5> {{ info.project }}
@@ -166,8 +168,10 @@
           <b-button squared variant="light" @click="cleanInput">
             <i class="fa fa-broom"></i> Clear
           </b-button>
-          <b-button squared variant="success" @click="submit" :disabled="btn_disabled">
-            <i class="far fa-paper-plane"></i> Send
+          <b-button squared :variant="btn_status" @click="submit" :disabled="btn_disabled">
+            <i class="fa" :class="btn_class" v-if="!btn_disabled"></i>
+            <b-spinner small v-else></b-spinner>
+            Send
           </b-button>
         </b-col>
         <b-col class="text-center">

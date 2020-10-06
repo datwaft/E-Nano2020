@@ -31,7 +31,10 @@ let data = {
   output: "",
   info: "",
 
-  btn_disabled: false,
+  btn_status: "success",
+
+  info_status: "dark",
+  info_show: false,
 
   mode_confirm: null,
   show_confirm: false
@@ -40,10 +43,32 @@ let data = {
 let app = new Vue({
   el: '#app',
   data: data,
+  computed: {
+    btn_disabled: function () {
+      return this.btn_status === "secondary";
+    },
+    btn_class: function () {
+      switch (this.btn_status) {
+        case "danger": return "fa-exclamation-circle"
+        case "success": return "fa-paper-plane"
+        default: return ""
+      }
+    },
+    info_disabled: function () {
+      return this.info_status === "secondary";
+    },
+    info_class: function () {
+      switch (this.info_status) {
+        case "dark": return "fa-info-circle"
+        case "danger": return "fa-exclamation-circle"
+        default: return ""
+      }
+    }
+  },
   methods: {
     submit: async function () {
       try {
-        this.btn_disabled = true
+        this.btn_status = "secondary"
         let response = await fetch('http://localhost:8099/api', {
           method: 'POST',
           body: JSON.stringify({
@@ -51,10 +76,10 @@ let app = new Vue({
           })
         })
         this.output = (await response.json()).output
-        this.btn_disabled = false
+        this.btn_status = "success"
       } catch (err) {
+        this.btn_status = "danger"
         console.error(err)
-        this.btn_disabled = false
       }
     },
     cleanInput: function () {
@@ -66,16 +91,22 @@ let app = new Vue({
       this.show_confirm = true
     },
     clean: function () {
-      this[this.mode_confirm] = ""
-      this.mode_confirm = null
       this.show_confirm = false
+      setTimeout((() => {
+        this.mode_confirm = null
+      }), 300)
+      this[this.mode_confirm] = ""
     },
     getInfo: async function () {
       try {
+        this.info_status = "secondary"
         let response = await fetch('http://localhost:8099/info')
         this.info = await response.json()
+        this.info_status = "dark"
+        this.info_show = true
         console.log(this.info)
       } catch (err) {
+        this.info_status = "danger"
         console.error(err)
       }
     },
