@@ -35,9 +35,14 @@ import java.util.Map;
 import com.group03.utils.OutUtils;
 import com.group03.utils.RouterUtils;
 import com.group03.utils.CompileUtils;
+import com.group03.utils.DatabaseUtils;
 import com.group03.utils.FileUtils;
 
 import org.json.JSONObject;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
+import org.slf4j.LoggerFactory;
 
 import fi.iki.elonen.NanoHTTPD.Response.IStatus;
 import fi.iki.elonen.router.RouterNanoHTTPD;
@@ -55,11 +60,18 @@ public class App extends RouterNanoHTTPD {
   }
 
   public static void main(String... args) {
+    previous();
     try {
       new App();
     } catch (IOException ioe) {
       OutUtils.errorFormat("%nCould not start server: %s%n", ioe.getLocalizedMessage());
     }
+  }
+
+  private final static void previous() {
+    var loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+    var rootLogger = loggerContext.getLogger("org.mongodb.driver");
+    rootLogger.setLevel(Level.OFF);
   }
 
   @Override
@@ -86,11 +98,11 @@ public class App extends RouterNanoHTTPD {
     @Override
     public Response get(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
       try {
-        var info = FileUtils.readString("info.json");
+        var info = DatabaseUtils.getInfo();
 
         OutUtils.successFormatWithDatetime("Successful response to '%s' request [%s].%n", session.getUri(), session.getMethod());
 
-        var response = newFixedLengthResponse(Response.Status.OK, MIME_PLAINTEXT, info);
+        var response = newFixedLengthResponse(Response.Status.OK, MIME_PLAINTEXT, info.toString());
         response = RouterUtils.allowCors(response, session);
         return response;
       } catch (Exception e) {
