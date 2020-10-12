@@ -126,7 +126,7 @@ El botón de arriba a la derecha que dice **About** sirve para ver los integrant
 
 A continuación un ejemplo:
 
-![image-20201011214857091](C:\Users\David\AppData\Roaming\Typora\typora-user-images\image-20201011214857091.png)
+![image](https://user-images.githubusercontent.com/37723586/95704429-081b1480-0c0e-11eb-8499-df450147bd23.png)
 
 ## Estructura del proyecto
 
