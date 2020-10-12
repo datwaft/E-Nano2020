@@ -26,48 +26,50 @@
 
 package com.group03.utils;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.group03.compiler.Compiler;
+
+import org.javatuples.Pair;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class CompileUtils {
   private static Pattern class_name = Pattern.compile("class\\s+(\\S+)\\s*\\{");
+  private static Pattern public_class_name = Pattern.compile("public class\\s+(\\S+)\\s*\\{");
+
+  private static ImmutableMap<String, String> types_of_messages = ImmutableMap.of(
+    "SUCCESS", "<span style=\"color: green\">%s</span>",
+    "ERROR", "<span style=\"color: red\">%s</span>",
+    "WARNING", "<span style=\"color: yellow\">%s</span>",
+    "NOTE", "<span style=\"color: white\">%s</span>"
+  );
 
   public static String compileString(String source) {
-    var output = new StringBuilder();
-
     var file_name = "";
-    var matcher = class_name.matcher(source);
-    if (matcher.find()) {
-      file_name = matcher.group(1);
+    var public_matcher = public_class_name.matcher(source);
+    if (public_matcher.find()) {
+      file_name = public_matcher.group(1);
+    } else {
+      var matcher = class_name.matcher(source);
+      if (matcher.find()) {
+        file_name = matcher.group(1);
+      }
     }
 
     var compiler = new Compiler();
-    Class<?> compiled_class = null;
+    Pair<Class<?>, ImmutableList<Pair<String, String>>> result = null;
     try {
-      compiled_class = compiler.compile(source, file_name);
+      result = compiler.compile(source, file_name);
     } catch(IOException | ClassNotFoundException ex) { }
 
-    for (var pair : compiler.getOutput()) {
-      switch(pair.getValue0()) {
-        case "SUCCESS":
-          output.append(String.format("<span style=\"color: green\">%s</span>%n", pair.getValue1()));
-          break;
-        case "ERROR":
-          output.append(String.format("<span style=\"color: red\">%s</span>", pair.getValue1()));
-          break;
-        case "MANDATORY_WARNING":
-        case "WARNING":
-          output.append(String.format("<span style=\"color: yellow\">%s</span>", pair.getValue1()));
-          break;
-        case "NOTE":
-        case "OTHER":
-          output.append(String.format("<span style=\"color: white\">%s</span>", pair.getValue1()));
-          break;
-      }
-    }
-    return output.toString();
+    return result.getValue1().stream()
+      .map((p) -> Pair.with(p.getValue0().equals("MANDATORY_WARNING") ? "WARNING" : p.getValue0(), p.getValue1()))
+      .map((p) -> Pair.with(p.getValue0().equals("OTHER") ? "NOTE" : p.getValue0(), p.getValue1()))
+      .map((p) -> String.format(types_of_messages.get(p.getValue0()), p.getValue1()))
+      .collect(Collectors.joining("\n"));
   }
 
 }

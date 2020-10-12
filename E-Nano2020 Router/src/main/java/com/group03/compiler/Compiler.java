@@ -28,10 +28,11 @@ package com.group03.compiler;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
@@ -39,9 +40,10 @@ import javax.tools.ToolProvider;
 
 import org.javatuples.Pair;
 
+import com.google.common.collect.ImmutableList;
+
 public class Compiler {
   private ClassLoader class_loader = Compiler.class.getClassLoader();
-  private List<Pair<String, String>> output = new ArrayList<>();
 
   public void setClassLoader(ClassLoader class_loader) {
     this.class_loader = class_loader;
@@ -51,7 +53,9 @@ public class Compiler {
     return canonical_class_name.substring(canonical_class_name.lastIndexOf('.') + 1);
   }
 
-  public Class<?> compile(String source, String canonical_class_name) throws ClassNotFoundException, IOException {
+  public Pair<Class<?>, ImmutableList<Pair<String, String>>> compile(String source, String canonical_class_name) throws ClassNotFoundException, IOException {
+    ImmutableList<Pair<String, String>> output;
+
 		var compiler = ToolProvider.getSystemJavaCompiler();
     var diagnostics = new DiagnosticCollector<JavaFileObject>();
 
@@ -71,44 +75,37 @@ public class Compiler {
 		var success = task.call();
 
     if (success) {
-      output.add(new Pair<>("SUCCESS", "The code compiled successfully.\n"));
+      output = ImmutableList.of(Pair.with("SUCCESS", "The code compiled successfully.\n"));
     } else {
-      output.add(new Pair<>("ERROR", "The code compiled with errors.\n"));
+      output = ImmutableList.of(Pair.with("ERROR", "The code compiled with errors.\n"));
     }
-
-    for (var diagnostic : diagnostics.getDiagnostics()) {
-      var pos = diagnostic.getLineNumber();
-      var location = pos >= 0 ? String.format("Line %d", pos) : "Unavailable";
-      String message = String.format("%s: %s.%n",
-        location,
-        diagnostic.getMessage(null)
-      );
-      output.add(new Pair<>(
-        diagnostic.getKind().toString(),
-        message
-      ));
-    }
+    
+    output = Stream.concat(
+      output.stream(), 
+      diagnostics.getDiagnostics().stream()
+        .map((d) -> Pair.with(
+          d.getKind().toString(), 
+          String.format("%s: %s.%n", 
+            d.getLineNumber() >= 0 ? String.format("Line %d", d.getLineNumber()) 
+                                   : "Unavailable",
+                                   d.getMessage(null))
+          )
+        )
+      ).collect(Collectors.collectingAndThen(Collectors.toList(), ImmutableList::copyOf));
 
 		if (success) {
 			var loader = new ByteClassLoader(new URL[0], class_loader, classesByteArraysMap(manager));
-			var klazz = loader.loadClass(canonical_class_name);
+			Class<?> klazz = loader.loadClass(canonical_class_name);
 			loader.close();
-			return klazz;
+			return Pair.with(klazz, output);
 		} else {
-			return null;
+			return Pair.with(null, output);
 		}
 	}
 
   private Map<String, byte[]> classesByteArraysMap(InMemoryFileManager file_manager) {
-    var result = new HashMap<String, byte[]>();
-    for (var name : file_manager.getClassFileObjectsMap().keySet()) {
-      result.put(name, file_manager.getClassFileObjectsMap().get(name).getByteArray());
-    }
-    return result;
-  }
-
-  public List<Pair<String, String>> getOutput() {
-    return output;
+    return file_manager.getClassFileObjectsMap().entrySet().stream()
+      .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue().getByteArray()));
   }
 }
 
