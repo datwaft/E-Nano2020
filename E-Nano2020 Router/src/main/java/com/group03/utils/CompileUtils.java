@@ -37,8 +37,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class CompileUtils {
-  private static Pattern class_name = Pattern.compile("class\\s+(\\S+)\\s*\\{");
-  private static Pattern public_class_name = Pattern.compile("public class\\s+(\\S+)\\s*\\{");
+  private static Pattern class_name = Pattern.compile("class\\s+(\\S+)");
+  private static Pattern public_class_name = Pattern.compile("public class\\s+(\\S+)");
 
   private static ImmutableMap<String, String> types_of_messages = ImmutableMap.of(
     "SUCCESS", "<span style=\"color: green\">%s</span>",
