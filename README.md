@@ -75,7 +75,7 @@ El proyecto terminó de compilarse una vez que aparece un texto como este:
 Para ejecutar el servidor se utiliza el comando:
 
 ```shell
-mvn exec:java -Dexec.mainClass="com.group03.App"
+mvn exec:java
 ```
 
 Una vez se terminó de iniciar el servidor va a aparecer una pantalla similar a la siguiente:
