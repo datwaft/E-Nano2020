@@ -4,7 +4,7 @@
   <groupId>com.group03</groupId>
   <artifactId>E-Nano2020StaticServer</artifactId>
   <packaging>jar</packaging>
-  <version>1.0</version>
+  <version>2.0</version>
   <name>E-Nano2020 Static Server</name>
   <url>http://maven.apache.org</url>
   <repositories>
