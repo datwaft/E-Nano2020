@@ -63,7 +63,7 @@ public class CompileUtils {
     Pair<Class<?>, ImmutableList<Pair<String, String>>> result = null;
     try {
       result = compiler.compile(source, file_name);
-    } catch(IOException | ClassNotFoundException ex) { }
+    } catch (IOException ex) { }
 
     return result.getValue1().stream()
       .map((p) -> Pair.with(p.getValue0().equals("MANDATORY_WARNING") ? "WARNING" : p.getValue0(), p.getValue1()))

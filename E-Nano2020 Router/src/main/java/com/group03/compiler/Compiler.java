@@ -28,7 +28,6 @@ package com.group03.compiler;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -53,7 +52,7 @@ public class Compiler {
     return canonical_class_name.substring(canonical_class_name.lastIndexOf('.') + 1);
   }
 
-  public Pair<Class<?>, ImmutableList<Pair<String, String>>> compile(String source, String canonical_class_name) throws ClassNotFoundException, IOException {
+  public Pair<Class<?>, ImmutableList<Pair<String, String>>> compile(String source, String canonical_class_name) throws IOException {
     ImmutableList<Pair<String, String>> output;
 
 		var compiler = ToolProvider.getSystemJavaCompiler();
@@ -95,9 +94,13 @@ public class Compiler {
 
 		if (success) {
 			var loader = new ByteClassLoader(new URL[0], class_loader, classesByteArraysMap(manager));
-			Class<?> klazz = loader.loadClass(canonical_class_name);
-			loader.close();
-			return Pair.with(klazz, output);
+      try {
+        Class<?> klazz = loader.loadClass(canonical_class_name);
+        loader.close();
+        return Pair.with(klazz, output);
+      } catch (Exception ex) {
+        return Pair.with(null, output);
+      }
 		} else {
 			return Pair.with(null, output);
 		}
