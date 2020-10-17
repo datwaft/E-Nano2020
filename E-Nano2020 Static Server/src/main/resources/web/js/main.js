@@ -69,7 +69,7 @@ let app = new Vue({
     submit: async function () {
       try {
         this.btn_status = "secondary"
-        let response = await fetch('http://localhost:8099/api', {
+        let response = await fetch('http://localhost:8099/compile', {
           method: 'POST',
           body: JSON.stringify({
             data: this.input
