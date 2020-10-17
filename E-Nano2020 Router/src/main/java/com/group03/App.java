@@ -76,7 +76,7 @@ public class App extends RouterNanoHTTPD {
 
   @Override
   public void addMappings() {//añade rutas
-    this.addRoute("/api", CodeHandler.class);
+    this.addRoute("/compile", CodeHandler.class);
     this.addRoute("/info", InfoHandler.class);
   }
 
