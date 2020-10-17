@@ -14,7 +14,7 @@ Para poder ejecutar este proyecto se requiere tener lo siguiente instalado en el
 
 ```shell
 mvn package
-mvn exec:java -Dexec.mainClass="com.group03.App"
+mvn exec:java
 ```
 
 ---
