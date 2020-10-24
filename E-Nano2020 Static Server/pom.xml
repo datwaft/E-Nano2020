@@ -39,7 +39,15 @@
   </dependencies>
   <build>
     <finalName>E-Nano2020 Static Server</finalName>
-		<plugins>
+	<resources>
+      <resource>
+        <directory>src/main/resources/web/dist</directory>
+      </resource>
+	  <resource>
+        <directory>src/main/resources/config</directory>
+      </resource>
+    </resources>
+	<plugins>
       <plugin> 
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>

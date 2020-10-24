@@ -1,0 +1,48 @@
+{
+  "name": "E-Nano2020",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-brands-svg-icons": "^5.15.1",
+    "@fortawesome/free-regular-svg-icons": "^5.15.1",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@fortawesome/vue-fontawesome": "^2.0.0",
+    "@types/prismjs": "^1.16.1",
+    "bootstrap-vue": "^2.1.0",
+    "codemirror": "^5.58.1",
+    "core-js": "^3.6.5",
+    "vue": "^2.6.11",
+    "vue-class-component": "^7.2.3",
+    "vue-codemirror": "^4.0.6",
+    "vue-prism-editor": "^1.2.2",
+    "vue-property-decorator": "^8.4.2"
+  },
+  "devDependencies": {
+    "@babel/polyfill": "^7.7.0",
+    "@techiediaries/vue-cli-plugin-bootstrap": "~0.1.0",
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-typescript": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/eslint-config-typescript": "^5.0.2",
+    "bootstrap": "^4.3.1",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "mutationobserver-shim": "^0.3.3",
+    "popper.js": "^1.16.0",
+    "portal-vue": "^2.1.6",
+    "prismjs": "^1.22.0",
+    "sass": "^1.19.0",
+    "sass-loader": "^8.0.0",
+    "typescript": "~3.9.3",
+    "vue-template-compiler": "^2.6.11"
+  }
+}

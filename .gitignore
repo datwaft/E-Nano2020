@@ -41,4 +41,11 @@ buildNumber.properties
 .vscode/
 tmp/
 
-# Generated from https://www.toptal.com/developers/gitignore/api/maven,java,java-web
+### VueJS ###
+**/node_modules/
+**/npm-debug.log
+**/yarn-error.log
+
+### Organization ###
+**/*.old
+**/*.reference

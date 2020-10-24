@@ -58,8 +58,8 @@ public class App extends NanoHTTPD { // es un servidor web ligero (para proyecto
 
   public Response serve(IHTTPSession session) {
     String uri = session.getUri();
-    var file = "web" + (isFile.matcher(uri).matches() ? uri : uri + "index.html");
-    var fileStream = FileUtils.readInputStream(file);
+    var file = (isFile.matcher(uri).matches() ? uri : uri + "index.html");
+    var fileStream = FileUtils.readInputStream(file.substring(1));
     if (fileStream != null) {
       OutUtils.successFormatWithDatetime("Successful response to '%s' static file request [%s].%n", file, session.getMethod());
       return newChunkedResponse(Status.OK, getMimeTypeForFile(file), fileStream);

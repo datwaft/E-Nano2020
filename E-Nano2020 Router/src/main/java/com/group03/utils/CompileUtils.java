@@ -21,33 +21,25 @@
  *   117540697
  * Group: 03
  * Schedule: 10am
- * Date of modification: 2020-10-04
+ * Date of modification: 2020-10-24
  */
 
 package com.group03.utils;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.group03.compiler.Compiler;
 
 import org.javatuples.Pair;
+import org.json.JSONArray;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class CompileUtils {
   private static Pattern class_name = Pattern.compile("class\\s+(\\S+)");
   private static Pattern public_class_name = Pattern.compile("public class\\s+(\\S+)");
 
-  private static ImmutableMap<String, String> types_of_messages = ImmutableMap.of(
-    "SUCCESS", "<span style=\"color: green\">%s</span>",
-    "ERROR", "<span style=\"color: red\">%s</span>",
-    "WARNING", "<span style=\"color: yellow\">%s</span>",
-    "NOTE", "<span style=\"color: white\">%s</span>"
-  );
-
-  public static String compileString(String source) {
+  public static JSONArray compileString(String source) {
     var file_name = "";
     var public_matcher = public_class_name.matcher(source);
     if (public_matcher.find()) {
@@ -68,8 +60,10 @@ public class CompileUtils {
     return result.getValue1().stream()
       .map((p) -> Pair.with(p.getValue0().equals("MANDATORY_WARNING") ? "WARNING" : p.getValue0(), p.getValue1()))
       .map((p) -> Pair.with(p.getValue0().equals("OTHER") ? "NOTE" : p.getValue0(), p.getValue1()))
-      .map((p) -> String.format(types_of_messages.get(p.getValue0()), p.getValue1()))
-      .collect(Collectors.joining("\n"));
+      .map((p) -> Pair.with(p.getValue0().toLowerCase(), p.getValue1()))
+      .map(Pair::toList)
+      .map(JSONArray::new)
+      .collect(JSONArray::new, JSONArray::put, JSONArray::put);
   }
 
 }
