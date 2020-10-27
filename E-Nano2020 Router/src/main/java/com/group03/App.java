@@ -134,10 +134,10 @@ public class App extends RouterNanoHTTPD {
     public Response post(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
       try {
         var post_data = RouterUtils.processData(session);
-        var data = post_data.getString("data");
+        var data = post_data.getString("source");
 
         var output = new HashMap<String, String>();
-        output.put("output", CompileUtils.compileString(data).toString());
+        output.put("messages", CompileUtils.compileString(data).toString());
 
         OutUtils.successFormatWithDatetime("Successful response to '%s' request [%s].", session.getUri(), session.getMethod());
         OutUtils.normalFormat("The source code is:%n%s%n", data);

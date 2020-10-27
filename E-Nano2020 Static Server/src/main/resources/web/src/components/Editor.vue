@@ -98,14 +98,17 @@ export default class Editor extends Vue {
   async compile() {
     try {
       this.status = "secondary"
-      const response = await fetch('http://localhost:8099/compile', {
+      const response = await fetch('http://localhost:8077/compile', {
         method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({
-          data: this.input
+          source: this.input
         })
       })
-      const code = (await response.json()).output
-      this.output = JSON.parse(code)
+      const output = (await response.json()).messages
+      this.output = JSON.parse(output)
       this.status = "success"
     } catch (err) {
       this.status = "danger"

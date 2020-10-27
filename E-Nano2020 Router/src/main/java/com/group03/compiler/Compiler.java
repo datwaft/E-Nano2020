@@ -74,9 +74,9 @@ public class Compiler {
 		var success = task.call();
 
     if (success) {
-      output = ImmutableList.of(Pair.with("SUCCESS", "The code compiled successfully.\n"));
+      output = ImmutableList.of(Pair.with("SUCCESS", "The code compiled successfully."));
     } else {
-      output = ImmutableList.of(Pair.with("ERROR", "The code compiled with errors.\n"));
+      output = ImmutableList.of(Pair.with("ERROR", "The code compiled with errors."));
     }
     
     output = Stream.concat(
@@ -84,7 +84,7 @@ public class Compiler {
       diagnostics.getDiagnostics().stream()
         .map((d) -> Pair.with(
           d.getKind().toString(), 
-          String.format("%s: %s.%n", 
+          String.format("%s: %s.", 
             d.getLineNumber() >= 0 ? String.format("Line %d", d.getLineNumber()) 
                                    : "Unavailable",
                                    d.getMessage(null))
