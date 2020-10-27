@@ -4,9 +4,9 @@
 :: | |__|_____| |\  | (_| | | | | (_) / __/| |_| / __/| |_| |
 :: |_____|    |_| \_|\__,_|_| |_|\___/_____|\___/_____|\___/
 ::
-:: File: compile-execute.java
+:: File: compile-execute-prolog-server.java
 :: Description:
-::    Script para compilar y ejecutar todos los servidores
+::    Script para ejecutar el servidor de prolog para transpilación.
 :: Authors:
 :: - David Alberto Guevara Sánchez
 ::   402450355
@@ -20,16 +20,18 @@
 ::   117540697
 :: Group: 03
 :: Schedule: 10am
-:: Date of modification: 2020-10-17
+:: Date of modification: 2020-10-26
 
 @echo off
 setlocal
+title Transpilation Server
 
-echo Calling router compiler and executer...
-start .\shell-scripts\compile-execute-router.bat
-echo Calling static server compiler and executer...
-start .\shell-scripts\compile-execute-static-server.bat
-echo Calling prolog server executer...
-start .\shell-scripts\compile-execute-prolog-server.bat
+echo Moving to folder...
+cd "./E-Nano2020 Transpiler/"
+
+echo.
+echo Executing...
+call swipl server.pl
 
 exit /b %errorlevel%
+
