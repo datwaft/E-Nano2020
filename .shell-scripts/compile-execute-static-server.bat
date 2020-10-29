@@ -30,6 +30,10 @@ echo Moving to folder...
 cd "static-server"
 
 echo.
+echo Wrapping...
+call gradle wrapper
+
+echo.
 echo Compiling...
 call gradlew build
 if errorlevel 1 goto :error
