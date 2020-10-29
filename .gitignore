@@ -61,6 +61,7 @@ pnpm-debug.log*
 ### Gradle ###
 .gradle
 build
+bin
 
 ### Organization ###
 **/*.old

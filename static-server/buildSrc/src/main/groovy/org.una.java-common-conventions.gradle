@@ -5,7 +5,7 @@ plugins {
 sourceSets {
   main {
     resources {
-      srcDirs = ['../resources/config', '../resources/web/dist']
+      srcDirs '../resources/config', '../resources/web/dist'
     }
   }
 }
