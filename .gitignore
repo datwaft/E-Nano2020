@@ -39,6 +39,7 @@ buildNumber.properties
 .project
 .settings/
 .vscode/
+.idea
 tmp/
 
 ### VueJS ###
@@ -56,6 +57,10 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+### Gradle ###
+.gradle
+build
 
 ### Organization ###
 **/*.old
