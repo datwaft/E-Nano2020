@@ -1,0 +1,4 @@
+plugins {
+  id 'org.una.java-common-conventions'
+  id 'application'
+}

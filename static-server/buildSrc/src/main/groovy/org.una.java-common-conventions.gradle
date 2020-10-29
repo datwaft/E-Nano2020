@@ -1,0 +1,24 @@
+plugins {
+  id 'java'
+}
+
+sourceSets {
+  main {
+    resources {
+      srcDirs = ['../resources/config', '../resources/web/dist']
+    }
+  }
+}
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+tasks.named('test') {
+  useJUnitPlatform()
+}

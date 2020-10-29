@@ -1,0 +1,12 @@
+plugins {
+  id 'org.una.java-library-conventions'
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'com.diogonunes:JColor:5.0.1'
+  implementation 'com.google.guava:guava:30.0-jre'
+}
