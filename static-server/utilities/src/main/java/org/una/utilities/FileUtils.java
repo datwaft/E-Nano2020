@@ -1,6 +1,7 @@
 package org.una.utilities;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 
 import java.io.InputStream;
 import java.util.Properties;
@@ -29,9 +30,7 @@ public class FileUtils {
     var properties = new Properties();
     try (var input_stream = FileUtils.class.getClassLoader().getResourceAsStream(filename)) {
       properties.load(input_stream);
-      return properties.entrySet().stream().collect(
-        ImmutableMap.toImmutableMap(e -> e.getKey().toString(), e-> e.getValue().toString())
-      );
+      return Maps.fromProperties(properties);
     } catch (Exception ex) {
       LogUtils.format(LogUtils.Style.ERROR, "File '%s' failed to load.", filename);
       return null;
