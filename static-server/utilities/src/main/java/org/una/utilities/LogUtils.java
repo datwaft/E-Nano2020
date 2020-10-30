@@ -82,19 +82,23 @@ public class LogUtils {
   }
 
   public static void format(Style style, String string, Object... args) {
-    System.out.println(getStyleFormat(convertStyle(style), String.format(string, args)));
+    System.out.println(getStyleFormat(style, String.format(string, args)));
   }
 
   public static void formatD(Style style, String string, Object... args) {
-    System.out.println(getStyleFormat(style, getDate()) + getStyleFormat(convertStyle(style), String.format(string, args)));
+    System.out.println(getStyleFormat(convertStyle(style), getDate()) + getStyleFormat(style, String.format(string, args)));
   }
 
   public static void format(String string, Object... args) {
-    System.out.println(getStyleFormat(StyleBold.NOTE, String.format(string, args)));
+    System.out.println(getStyleFormat(Style.NOTE, String.format(string, args)));
   }
 
   public static void formatD(String string, Object... args) {
-    System.out.println(getStyleFormat(Style.NOTE, getDate()) + getStyleFormat(StyleBold.NOTE, String.format(string, args)));
+    System.out.println(getStyleFormat(StyleBold.NOTE, getDate()) + getStyleFormat(Style.NOTE, String.format(string, args)));
+  }
+
+  public static String bold(String string, Object... args) {
+    return colorize(String.format(string, args), BOLD());
   }
 
 }

@@ -44,15 +44,15 @@ public class App extends NanoHTTPD {
   public App() throws IOException {
     super(port);
     start(SOCKET_READ_TIMEOUT, false);
-    LogUtils.format(Style.SUCCESS, "%nThe webserver is running on the port %d.", port);
-    LogUtils.format(Style.NOTE, "The url is http://localhost:%d/%n", port);
+    LogUtils.format(Style.SUCCESS, "%nThe webserver is running on the port %s.", LogUtils.bold("%s", port));
+    LogUtils.format(Style.NOTE, "The url is http://localhost:%s/%n", LogUtils.bold("%s", port));
   }
 
   public static void main(String... args) {
     try {
       new App();
     } catch (IOException ioe) {
-      LogUtils.format(Style.ERROR, "%nCould not start server: %s%n", ioe.getLocalizedMessage());
+      LogUtils.format(Style.ERROR, "%nCould not start server: %s%n", LogUtils.bold(ioe.getLocalizedMessage()));
     }
   }
 
@@ -61,10 +61,10 @@ public class App extends NanoHTTPD {
     var filename = (isFile.matcher(uri).matches() ? uri : uri + "index.html").substring(1);
     var stream = FileUtils.readInputStream(filename);
     if (stream != null) {
-      LogUtils.formatD(Style.SUCCESS, "Successful response to '%s' static file request [%s].%n", filename, session.getMethod());
+      LogUtils.formatD(Style.SUCCESS, "Successful response to '%s' static file request [%s].%n", LogUtils.bold(filename), LogUtils.bold("%s", session.getMethod()));
       return newChunkedResponse(Response.Status.OK, getMimeTypeForFile(filename), stream);
     } else {
-      LogUtils.formatD(Style.WARNING, "Static file not found: '%s' [%s].%n", filename, session.getMethod());
+      LogUtils.formatD(Style.WARNING, "Static file not found: '%s' [%s].%n", LogUtils.bold(filename), LogUtils.bold("%s", session.getMethod()));
       return newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
     }
   }
