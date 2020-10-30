@@ -1,3 +1,29 @@
+/**
+ *  _____      _   _                  ____   ___ ____   ___
+ * | ____|    | \ | | __ _ _ __   ___|___ \ / _ \___ \ / _ \
+ * |  _| _____|  \| |/ _` | '_ \ / _ \ __) | | | |__) | | | |
+ * | |__|_____| |\  | (_| | | | | (_) / __/| |_| / __/| |_| |
+ * |_____|    |_| \_|\__,_|_| |_|\___/_____|\___/_____|\___/
+ *
+ * File: App.java
+ * Description:
+ *    Archivo inicial del router para E-Nano2020, se encarga de servidor los archivos estáticos.
+ * Authors:
+ * - David Alberto Guevara Sánchez
+ *   402450355
+ * - Joy Bonilla Fley
+ *   402360421
+ * - Jose Barrantes Araya
+ *   207600954
+ * - Natalia Solano Azofeifa
+ *   117290958
+ * - Luis David Villalobos Gonzalez
+ *   117540697
+ * Group: 03
+ * Schedule: 10am
+ * Date of modification: 2020-10-29
+ */
+
 package org.una.app;
 
 import com.google.common.collect.ImmutableMap;
@@ -13,12 +39,7 @@ import static org.una.utilities.LogUtils.Style;
 public class App extends NanoHTTPD {
   public static Pattern isFile = Pattern.compile("^.*[^/]$");
   private static final ImmutableMap<String, String> properties = FileUtils.readProperties("server.properties");
-  private static final Integer port;
-
-  static {
-    assert properties != null;
-    port = Integer.valueOf(properties.get("port"));
-  }
+  private static final Integer port = Integer.valueOf(properties.get("port"));
 
   public App() throws IOException {
     super(port);
