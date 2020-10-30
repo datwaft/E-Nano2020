@@ -4,9 +4,9 @@
 :: | |__|_____| |\  | (_| | | | | (_) / __/| |_| / __/| |_| |
 :: |_____|    |_| \_|\__,_|_| |_|\___/_____|\___/_____|\___/
 ::
-:: File: compile-execute.java
+:: File: compile-execute-router.java
 :: Description:
-::    Script para compilar y ejecutar todos los servidores
+::    Script para compilar y ejecutar el servidor router.
 :: Authors:
 :: - David Alberto Guevara Sánchez
 ::   402450355
@@ -20,16 +20,34 @@
 ::   117540697
 :: Group: 03
 :: Schedule: 10am
-:: Date of modification: 2020-10-17
+:: Date of modification: 2020-10-29
 
 @echo off
 setlocal
+title Router
 
-echo Calling router compiler and executer...
-start .\.shell-scripts\compile-execute-router.bat
-echo Calling static server compiler and executer...
-start .\.shell-scripts\compile-execute-static-server.bat
-echo Calling prolog server executer...
-start .\.shell-scripts\compile-execute-transpiler.bat
+echo Moving to folder...
+cd "router"
+
+echo.
+echo Wrapping...
+call gradle wrapper
+
+echo.
+echo Compiling...
+call gradlew build
+if errorlevel 1 goto :error
+
+echo.
+echo Executing...
+call gradlew run
+goto :end
+
+:error
+
+echo.
+echo The compilation has errors, cannot run.
+
+:end
 
 exit /b %errorlevel%

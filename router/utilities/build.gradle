@@ -1,0 +1,17 @@
+plugins {
+  id 'org.una.java-library-conventions'
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation project(':compiler')
+  implementation 'com.diogonunes:JColor:5.0.1'
+  implementation 'com.google.guava:guava:30.0-jre'
+  implementation 'org.mongodb:mongo-java-driver:3.12.7'
+  implementation 'org.json:json:20200518'
+  implementation 'org.nanohttpd:nanohttpd-nanolets:2.3.1'
+  implementation 'org.javatuples:javatuples:1.2'
+}

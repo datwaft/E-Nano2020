@@ -1,0 +1,17 @@
+plugins {
+  id 'org.una.java-application-conventions'
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation project(':utilities')
+  implementation 'org.nanohttpd:nanohttpd:2.3.0'
+  implementation 'com.google.guava:guava:30.0-jre'
+}
+
+application {
+  mainClass = 'org.una.app.App'
+}

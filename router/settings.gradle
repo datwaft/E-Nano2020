@@ -1,0 +1,2 @@
+rootProject.name = 'E-Nano2020 Router'
+include('app', 'compiler', 'utilities')
