@@ -1,0 +1,12 @@
+plugins {
+  id 'org.una.java-library-conventions'
+}
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'com.google.guava:guava:30.0-jre'
+  implementation 'org.javatuples:javatuples:1.2'
+}
