@@ -23,6 +23,6 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
       - name: Build Static Server with Gradle
-        run: static-server/gradlew build
+        run: ./static-server/gradlew build
       - name: Build Router with Gradle
-        run: router/gradlew build
+        run: ./router/gradlew build
