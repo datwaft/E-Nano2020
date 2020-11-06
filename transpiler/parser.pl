@@ -15,6 +15,14 @@
   declaration(declaration(Type, Name, Value)) --> declaration(declaration(Type, Name)), ['='], advanced_body(Value).
   declaration(declaration(Type, Name)) --> ['val'], ['<'], type(Type), ['>'], variable_name(Name).
   declaration(declaration(Type, Name, Lambda)) --> ['val'], ['<'], method_type(Type), ['>'], variable_name(Name), ['='], lambda(Lambda).
+% Method definition
+% =================
+  % TODO
+% Lambda definition
+% =================
+  lambda(lambda(Variable, Body)) --> variable_name(Variable), ['->'], lambda_body(Body).
+  % Body
+  lambda_body(body(Body)) --> advanced_body(Body).
 % Type definition
 % ===============
   type(type(Type)) --> [Type], { identifier(Type) }.
@@ -35,14 +43,6 @@
   list_body([Term]) --> general_body(Term).
 % Function definition
 % ===================
-  % TODO
-% Lambda definition
-% =================
-  lambda(lambda(Variable, Body)) --> variable_name(Variable), ['->'], lambda_body(Body).
-  % Body
-  lambda_body(body(Body)) --> advanced_body(Body).
-% Method definition
-% =================
   % TODO
 % Operation definition
 % ====================
