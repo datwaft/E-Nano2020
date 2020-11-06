@@ -26,7 +26,32 @@ skipWhiteSpace(Input, Input).
 
 startOneToken(Input, Token, Rest) :- startOneToken(Input, [], Token, Rest).
 startOneToken([], P, P, []).
+
 startOneToken([C | Input], Partial, Token, Rest) :- isDigit(C), !,
+                                                    finishNumber(Input, [ C | Partial], Token, Rest)
+.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+startOneToken([A,C | Input], Partial, Token, Rest) :- isNNSign(A), !,
+													isNDot(C), !,
+                                                    finishNumber(Input, [ C,'0',A| Partial], Token, Rest)
+.
+startOneToken([A,C | Input], Partial, Token, Rest) :- isNPSign(C), !,
+													isNDot(A), !,
+                                                    finishNumber(Input, [ C ,'0'| Partial], Token, Rest)
+.
+startOneToken([C | Input], Partial, Token, Rest) :- isNDot(C), !,
+                                                    finishNumber(Input, [ C ,'0'| Partial], Token, Rest)
+.
+startOneToken([C | Input], Partial, Token, Rest) :- isNNSign(C), !,
+                                                    finishNumber(Input, [ C| Partial], Token, Rest)
+.
+startOneToken([C | Input], Partial, Token, Rest) :- isNPSign(C), !,
+                                                    finishNumber(Input, Partial, Token, Rest)
+.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+startOneToken([C | Input], Partial, Token, Rest) :- specialNumber([C|Input]), !,
                                                     finishNumber(Input, [ C | Partial], Token, Rest)
 .
 
@@ -37,9 +62,6 @@ startOneToken([C | Input], Partial, Token, Rest) :- isLetter(C), !,
 startOneToken([C | Input], Partial, Token, Rest) :- isSpecial(C), !,
                                                     finishSpecial(Input, [ C | Partial], Token, Rest)
 .
-startOneToken([C | Input], Partial, Token, Rest) :- isQuote(C), !,
-                                                    finishQuote(Input, [ C | Partial], Token, Rest)
-.
 startOneToken([C | _] , _, _, _)                  :- report_invalid_symbol(C)
 .
 
@@ -49,19 +71,9 @@ report_invalid_symbol(C) :-
     throw(A)
 . 
 
-% finalizar lectura de un numero
-finishNumber(Input, Partial, Token, Rest) :- finishToken(Input, isDigit, Partial, Token, Rest)
-.
 % finalizar lectura de un ID
 finishId(Input, Partial, Token, Rest) :- finishToken(Input, isLetterOrDigit, Partial, Token, Rest)
 .
-
-finishQuote([C | Input], Partial, Token, Input) :- isQuote(C), !,
-                                                   convertToAtom([C | Partial], Token) 
-.
-
-finishQuote([C | Input], Partial, Token, Rest) :- finishQuote(Input, [C |Partial], Token, Rest).
-finishQuote([] , _Partial, _Token, _Input) :- throw('opened and not closed string').
 
 % finalizar lectura de un caracte especial, para el caso de si es doble y simple
 finishSpecial([C | Input], [PC | Partial], Token, Input) :- doubleSpecial(PC, C), !, 
@@ -77,11 +89,38 @@ finishToken([C | Input], Continue, Partial, Token, Rest) :- call(Continue, C), !
 
 finishToken(Input, _, Partial, Token, Input) :- convertToAtom(Partial, Token).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% finalizar lectura de un numero
 
+finishNumber([C|Input], Partial, Token, Rest) :- isNDot(C),!,
+												finishNumber(Input, [ C | Partial ], Token, Rest)
+.
+finishNumber([C|Input], Partial, Token, Rest) :- isDigit(C),!,
+												finishNumber(Input, [ C | Partial ], Token, Rest)
+.
+finishNumber([A,C|Input], Partial, Token, Rest) :- isNE(A),!,
+												isNPSign(C),!,
+												finishNumber(Input, [ C ,A | Partial ], Token, Rest)
+.
+finishNumber([A,C|Input], Partial, Token, Rest) :- isNE(A),!,
+												isNNSign(C),!,
+												finishNumber(Input, [ C ,A |Partial ], Token, Rest)
+.
+
+finishNumber(Input, Partial, Token, Input) :- convertToAtom(Partial, Token).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 isWhiteSpace(C) :- member(C, ['\r', '\n', '\t', ' ']).
 
-isDigit(D)   :- D @>= '0', D @=< '9'.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+isNDot(D)	:- 	D='.'.
+isNE(D)		:- 	D ='e'.
+isNE(D)		:-	D ='E'.
+isNNSign(D)	:- 	D ='-'.
+isNPSign(D)	:- 	D ='+'.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+isDigit(D)   	:- D @>= '0', D @=< '9'.
 
 isLetter('_') :- !. 
 isLetter('$') :- !. 
@@ -91,10 +130,9 @@ isLetter(D)  :- D @>= 'A', D @=< 'Z'.    % A .. Z
 isLetterOrDigit(C) :- isLetter(C),!.
 isLetterOrDigit(D) :- isDigit(D),!.
 
-isQuote('"'). 
 % special tokens
 isSpecial(O)    :- member(O, ['=', '<', '>', '*', '-', '+', '/', '\\', '.', '(', ')']), !.
-isSpecial(O)    :- member(O, ['{', '}', '[', ']', '&', '|', '%', '!', '?', ';', ',']), !.
+isSpecial(O)    :- member(O, ['{', '}', '"','[', ']', '&', '|', '%', '!', '?', ';', ',']), !.
 isSpecial(O)    :- member(O, ['@', ':']), !.
 
 % double operators
