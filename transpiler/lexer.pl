@@ -3,7 +3,7 @@
 */
 
 :- module(lexer, [
-   tokenize/2
+   tokenizer/2
 ]).
 
 :- use_module(library(pcre)).
