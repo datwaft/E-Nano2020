@@ -9,10 +9,10 @@
   test_case(['val', '<', 'int', '>', 'x', '=', '666']).
 % Assignment definition
 % =====================
-  assignment(assignment(Name, Value)) --> variable_name(Name), ['='], term(Value).
+  assignment(assignment(Name, Value)) --> variable_name(Name), ['='], advanced_body(Value).
 % Declaration definition
 % ======================
-  declaration(declaration(Type, Name, Value)) --> declaration(declaration(Type, Name)), ['='], term(Value).
+  declaration(declaration(Type, Name, Value)) --> declaration(declaration(Type, Name)), ['='], advanced_body(Value).
   declaration(declaration(Type, Name)) --> ['val'], ['<'], type(Type), ['>'], variable_name(Name).
   declaration(declaration(Type, Name, Lambda)) --> ['val'], ['<'], method_type(Type), ['>'], variable_name(Name), ['='], lambda(Lambda).
 % Type definition
