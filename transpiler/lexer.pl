@@ -3,7 +3,7 @@
 */
 
 :- module(lexer, [
-   tokenizer/2
+   string_to_tokens/2
 ]).
 
 :- use_module(library(pcre)).
@@ -130,7 +130,7 @@ tokenize(File, Tokens) :- open(File, read, Stream),
                           getTokens(Chars, Tokens)
 .
 
-tokenizer(String, Tokens) :- 	open_string(String, Stream),
+string_to_tokens(String, Tokens) :- 	open_string(String, Stream),
 								read_stream_to_codes(Stream, Codes),
 								close(Stream),
 								codes_to_chars(Codes, Chars),
