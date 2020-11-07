@@ -42,6 +42,8 @@
   list_body([]), [']'] --> [']'].
   list_body([Term | Rest]) --> general_body(Term), [','], list_body(Rest).
   list_body([Term]) --> general_body(Term).
+  % Parentheses
+  parentheses(parentheses(Expression)) --> ['('], advanced_body(Expression), [')'].
 % Function definition
 % ===================
   % Funciton call definition
@@ -70,6 +72,7 @@
   identifier(Name) :- atom(Name), re_match('^[a-zA-Z_][\\w]*$'/i, Name).
   % Specific body
   specific_body(Body) --> term(Body).
+  specific_body(Body) --> parentheses(Body).
   specific_body(Body) --> function_call(Body).
   % General body
   general_body(Body) --> specific_body(Body).
