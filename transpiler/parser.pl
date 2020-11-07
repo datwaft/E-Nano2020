@@ -6,7 +6,9 @@
 
 % Test cases
 % ==========
-  test_case(['val', '<', 'int', '>', 'x', '=', '666']).
+  test_case(1, ['val', '<', 'int', '>', 'x', '=', '666']).
+  test_case(2, ['val', '<', 'int', '->', 'int', '>', 'x', '=', 'x', '->', 'x', '+', '2']).
+  test_case(3, ['function', '(', 'function', '(', ')', '+', 'y', ')']).
 % Assignment definition
 % =====================
   assignment(assignment(Name, Value)) --> variable_name(Name), ['='], advanced_body(Value).
