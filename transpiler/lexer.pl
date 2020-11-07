@@ -27,33 +27,26 @@ skipWhiteSpace(Input, Input).
 startOneToken(Input, Token, Rest) :- startOneToken(Input, [], Token, Rest).
 startOneToken([], P, P, []).
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%parametros extra
+%signo, decimal,iniciado
+
+startOneToken([C | Input], Partial, Token, Rest) :- isCero(C), !,
+                                                    finishNumber(Input,Partial, Token, Rest,'0','0','0')
+.
 startOneToken([C | Input], Partial, Token, Rest) :- isDigit(C), !,
-                                                    finishNumber(Input, [ C | Partial], Token, Rest)
+                                                    finishNumber(Input, [ C | Partial], Token, Rest,'0','0','1')
 .
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-startOneToken([A,C | Input], Partial, Token, Rest) :- isNNSign(A), !,
-													isNDot(C), !,
-                                                    finishNumber(Input, [ C,'0',A| Partial], Token, Rest)
+startOneToken([C | Input], Partial, Token, Rest) :- isDot(C), !,
+                                                    finishNumber(Input, [ C ,'0'| Partial], Token, Rest,'0','1','1')
 .
-startOneToken([A,C | Input], Partial, Token, Rest) :- isNPSign(C), !,
-													isNDot(A), !,
-                                                    finishNumber(Input, [ C ,'0'| Partial], Token, Rest)
-.
-startOneToken([C | Input], Partial, Token, Rest) :- isNDot(C), !,
-                                                    finishNumber(Input, [ C ,'0'| Partial], Token, Rest)
-.
-startOneToken([C | Input], Partial, Token, Rest) :- isNNSign(C), !,
-                                                    finishNumber(Input, [ C| Partial], Token, Rest)
-.
-startOneToken([C | Input], Partial, Token, Rest) :- isNPSign(C), !,
-                                                    finishNumber(Input, Partial, Token, Rest)
+startOneToken([C | Input], Partial, Token, Rest) :- isSign(C), !,
+													(	isNSign(C) ->
+														finishNumber(Input, Partial, Token, Rest,'1','0','0');
+														finishNumber(Input, Partial, Token, Rest,'0','0','0'))
 .
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-startOneToken([C | Input], Partial, Token, Rest) :- specialNumber([C|Input]), !,
-                                                    finishNumber(Input, [ C | Partial], Token, Rest)
-.
 
 startOneToken([C | Input], Partial, Token, Rest) :- isLetter(C), !,
                                                     finishId(Input, [ C | Partial], Token, Rest)
@@ -89,38 +82,61 @@ finishToken([C | Input], Continue, Partial, Token, Rest) :- call(Continue, C), !
 
 finishToken(Input, _, Partial, Token, Input) :- convertToAtom(Partial, Token).
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % finalizar lectura de un numero
+% parametros extra
+% signo decimal iniciado
+finishNumber([], [], Token, [],_,_,_) :- convertToAtom(['0'], Token).
 
-finishNumber([C|Input], Partial, Token, Rest) :- isNDot(C),!,
-												finishNumber(Input, [ C | Partial ], Token, Rest)
-.
-finishNumber([C|Input], Partial, Token, Rest) :- isDigit(C),!,
-												finishNumber(Input, [ C | Partial ], Token, Rest)
-.
-finishNumber([A,C|Input], Partial, Token, Rest) :- isNE(A),!,
-												isNPSign(C),!,
-												finishNumber(Input, [ C ,A | Partial ], Token, Rest)
-.
-finishNumber([A,C|Input], Partial, Token, Rest) :- isNE(A),!,
-												isNNSign(C),!,
-												finishNumber(Input, [ C ,A |Partial ], Token, Rest)
+finishNumber(Input, Partial, Token, Input,sign,_,_) :- (	isNegative(sign) ->
+															convertToAtom(['-'|Partial], Token)	;
+															convertToAtom(Partial, Token)	)
 .
 
-finishNumber(Input, Partial, Token, Input) :- convertToAtom(Partial, Token).
+finishNumber([C|Input], Partial, Token, Rest,sign,dec,str) 	:- isCero(C),!,
+															(	isStarter(str) ->	
+																finishNumber(Input, [ C | Partial ], Token, Rest,sign,dec,'1');
+																finishNumber(Input,Partial, Token, Rest,sign,dec,'0'))
+.
+
+finishNumber([C|Input], Partial, Token, Rest,sign,dec,str) :- isDigit(C),!,
+												finishNumber(Input, [ C | Partial ], Token, Rest,sign,dec,'1')
+.
+
+finishNumber([C|Input], Partial, Token, Rest,sign,dec,str) :- isDot(C),!,
+												isDecimal(dec),!,
+												(	isStarter(str) ->
+													finishNumber(Input, [ C | Partial ], Token, Rest,sign,'1','1');
+													finishNumber(Input, [ C ,'0'| Partial ], Token, Rest,sign,'1','1')	)
+.
+finishNumber([C|Input], Partial, Token, Rest,sign,dec,str) :- isSign(C), !,
+													(	isNSign(C) ->
+														(	isNegative(sign) ->
+															finishNumber(Input, Partial, Token, Rest,'0',dec,str);
+															finishNumber(Input, Partial, Token, Rest,'1',dec,str)	);
+														finishNumber(Input, Partial, Token, Rest,sign,dec,str))
+.
+finishNumber([A,C|Input], Partial, Token, Rest,sign,dec,str) :- isE(A),!,
+												isSign(C),!,
+												finishNumber(Input, [ C ,A | Partial ], Token, Rest,sign,dec,str)
+.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 isWhiteSpace(C) :- member(C, ['\r', '\n', '\t', ' ']).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+isDot(D)	:- 	D='.'.
+isE(D)		:- 	member(D,['e','E']).
+isSign(D)	:- 	member(D,['+','-']).
+isNSign(D)	:- 	D ='-'.
+isCero(D)	:-	D='0'.
+isDigit(D)  :- 	D @>= '1', D @=< '9'.
 
+isDecimal(D)	:-	D='0'.
+isNegative(D)	:-	D='1'.
+isStarter(D)	:-	D='1'.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-isNDot(D)	:- 	D='.'.
-isNE(D)		:- 	D ='e'.
-isNE(D)		:-	D ='E'.
-isNNSign(D)	:- 	D ='-'.
-isNPSign(D)	:- 	D ='+'.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-isDigit(D)   	:- D @>= '0', D @=< '9'.
 
 isLetter('_') :- !. 
 isLetter('$') :- !. 
@@ -181,3 +197,4 @@ classify_token(Token, num(Token)) :- re_match("^\\d+(\\.\\d+)?$", Token),!.
 classify_token(Token, id(Token))  :- re_match("^[a-zA-Z]+[\\w$]*$", Token),!.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% esi
+%string_to_tokens('',T).
