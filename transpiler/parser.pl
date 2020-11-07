@@ -43,14 +43,20 @@
   list_body([Term]) --> general_body(Term).
 % Function definition
 % ===================
-  % TODO
+  % Funciton call definition
+  function_call(function_call(Name, Arguments)) --> variable_name(Name), ['('], function_call_arguments(Arguments) , [')'].
+  function_call_arguments([]), [')'] --> [')'].
+  function_call_arguments([Arg | Rest]) --> advanced_body(Arg), [','], function_call_arguments(Rest).
+  function_call_arguments([Arg]) --> advanced_body(Arg).
 % Operation definition
 % ====================
   % Operator definition
-    unary_operator(operator(Operator)) --> [Operator], { member(Operator, ['+', '-', '~']) }.
+    unary_ls_operator(operator(Operator)) --> [Operator], { member(Operator, ['+', '-', '~', '++', '--']) }.
+    unary_rs_operator(operator(Operator)) --> [Operator], { member(Operator, ['++', '--']) }.
     binary_operator(operator(Operator)) --> [Operator], { member(Operator, ['+', '-', '*', '/', '%', '==', '!=', '<=', '>=', '<', '>', '&&', '||', '^']) }.
   % Unary operation definiton
-    operation(operation(Operator, Term)) --> unary_operator(Operator), specific_body(Term).
+    operation(operation(Operator, Term)) --> unary_ls_operator(Operator), specific_body(Term).
+    operation(operation(Term, Operator)) --> specific_body(Term), unary_rs_operator(Operator).
   % Binary operation definition
     operation(operation(First, Operator, Second)) --> specific_body(First), binary_operator(Operator), general_body(Second).
   % Ternary operation definition
@@ -63,6 +69,7 @@
   identifier(Name) :- atom(Name), re_match('^[a-zA-Z_][\\w]*$'/i, Name).
   % Specific body
   specific_body(Body) --> term(Body).
+  specific_body(Body) --> function_call(Body).
   % General body
   general_body(Body) --> specific_body(Body).
   general_body(Body) --> operation(Body).
