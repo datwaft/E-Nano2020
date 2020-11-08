@@ -45,11 +45,6 @@ startOneToken([C | Input], Partial, Token, Rest) :- isDigit(C), !,
 startOneToken([C | Input], Partial, Token, Rest) :- isDot(C), !,
                                                     finishNumber(Input, [ C ,'0'| Partial], Token, Rest,'0','1','1')
 .
-startOneToken([C | Input], Partial, Token, Rest) :- isSign(C), !,
-													(	isNSign(C) ->
-														finishNumber(Input, Partial, Token, Rest,'1','0','0');
-														finishNumber(Input, Partial, Token, Rest,'0','0','0'))
-.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 startOneToken([C | Input], Partial, Token, Rest) :- isLetter(C), !,
@@ -78,6 +73,8 @@ finishId(Input, Partial, Token, Rest) :- finishToken(Input, isLetterOrDigit, Par
 finishSpecial([C | Input], [PC | Partial], Token, Input) :- doubleSpecial(PC, C), !, 
                                                          convertToAtom([C, PC | Partial], Token) 
 .
+
+finishSpecial(Input, Input, Token, Input) :- isSpecial(Input), convertToAtom(Input, Token) .
 
 finishSpecial(Input, Partial, Token, Input) :- convertToAtom(Partial, Token) 
 .
@@ -108,14 +105,6 @@ finishNumber([C|Input], Partial, Token, Rest,Sign,Dec,Strt) :- isDot(C),!,
 													finishNumber(Input, [ C | Partial ], Token, Rest,Sign,'1','1');
 													finishNumber(Input, [ C ,'0'| Partial ], Token, Rest,Sign,'1','1')	)
 .
-finishNumber([C|Input], Partial, Token, Rest,Sign,Dec,Strt) :- 	isSign(C), !,
-															isInStart(Strt),!,
-													(	isNSign(C) ->
-														(	isNegative(Sign) ->
-															finishNumber(Input, Partial, Token, Rest,'0',Dec,Strt);
-															finishNumber(Input, Partial, Token, Rest,'1',Dec,Strt)	);
-														finishNumber(Input, Partial, Token, Rest,Sign,Dec,Strt))
-.
 finishNumber([A,C|Input], Partial, Token, Rest,Sign,Dec,Strt) :- isE(A),!,
 												isSign(C),!,
 												finishNumber(Input, [ C ,A | Partial ], Token, Rest,Sign,Dec,Strt)
@@ -123,9 +112,7 @@ finishNumber([A,C|Input], Partial, Token, Rest,Sign,Dec,Strt) :- isE(A),!,
 
 finishNumber(Input, Input, Token, Input,_,_,_) :- convertToAtom(['0'], Token).
 
-finishNumber(Input, Partial, Token, Input,Sign,_,_) :-(	isNegative(Sign) ->
-															convertToAtom(['-'|Partial], Token);
-															convertToAtom(Partial, Token)	)
+finishNumber(Input, Partial, Token, Input,_,_,_) :-	convertToAtom(Partial, Token)
 .
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -142,6 +129,7 @@ isDigit(D)  :- 	D @>= '1', D @=< '9'.
 
 isDecimal(D)	:-	D='0'.
 isNegative(D)	:-	D='1'.
+isPositive(D)	:-	D='0'.
 isStarter(D)	:-	D='1'.
 isInStart(D)	:-	D='0'.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -167,6 +155,8 @@ doubleSpecial('>', '='). % >=
 doubleSpecial('&', '&'). % &&
 doubleSpecial('|', '|'). % &&
 doubleSpecial('-', '>'). % ->
+doubleSpecial('+', '+'). % ++
+doubleSpecial('-', '-'). % --
 
 % comments tokens
 doubleSpecial('/', '/'). % //
@@ -203,6 +193,7 @@ string_to_tokens(String, Tokens) :- 	open_string(String, Stream),
 
 classify_token(Token, num(Token)) :- re_match("^\\d+(\\.\\d+)?$", Token),!.
 classify_token(Token, id(Token))  :- re_match("^[a-zA-Z]+[\\w$]*$", Token),!.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% esi
 %string_to_tokens('',T).
