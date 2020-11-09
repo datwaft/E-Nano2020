@@ -4,6 +4,8 @@
 
 :- use_module(library(pcre)).
 
+:- table lambda_type/3.
+
 % Test cases
 % ==========
   test_case(1, ['val', '<', 'int', '>', 'x', '=', '666']).
@@ -15,21 +17,32 @@
 % ======================
   declaration(declaration(Type, Name, Value)) --> declaration(declaration(Type, Name)), ['='], advanced_body(Value).
   declaration(declaration(Type, Name)) --> ['val'], ['<'], type(Type), ['>'], variable_name(Name).
-  declaration(declaration(Type, Name, Lambda)) --> ['val'], ['<'], method_type(Type), ['>'], variable_name(Name), ['='], lambda(Lambda).
+  declaration(declaration(Type, Name, Lambda)) --> ['val'], ['<'], lambda_type(Type), ['>'], variable_name(Name), ['='], lambda(Lambda).
 % Method definition
 % =================
   % TODO
 % Lambda definition
 % =================
   lambda(lambda(Variable, Body)) --> variable_name(Variable), ['->'], lambda_body(Body).
+  lambda(lambda(Variable, Body)) --> ['('], lambda_parameter_list(Variable), [')'], ['->'], lambda_body(Body).
+  % Lambda parameter list
+  lambda_parameter_list([]), [')'] --> [')'].
+  lambda_parameter_list([Variable | Rest]) --> variable_name(Variable), [','], lambda_parameter_list(Rest).
+  lambda_parameter_list([Variable]) --> variable_name(Variable).
   % Body
   lambda_body(body(Body)) --> advanced_body(Body).
 % Type definition
 % ===============
   type(type(Type)) --> [Type], { identifier(Type) }.
   type(list_type(Type)) --> ['['], type(Type), [']'].
+  type(Type) --> lambda_type(Type).
   % Method type definition
-  method_type(type(From, To)) --> type(From), ['->'], type(To).
+  lambda_type(type(From, To)) --> type(From), ['->'], type(To).
+  lambda_type(type(From, To)) --> ['('], lambda_type_list(From) , [')'] , ['->'], type(To).
+  % Lambda type list
+  lambda_type_list([]), [')'] --> [')'].
+  lambda_type_list([Type | Rest]) --> type(Type), [','], lambda_type_list(Rest).
+  lambda_type_list([Type]) --> type(Type).
 % Term definition
 % ===============
   term(number(Term)) --> [Term], { number(Term) }.
@@ -46,6 +59,11 @@
   parentheses(parentheses(Expression)) --> ['('], advanced_body(Expression), [')'].
 % Function definition
 % ===================
+  % Function declaration definition
+  function_declaration(function_declaration(Name, Arguments)) --> variable_name(Name), ['('], function_declaration_arguments(Arguments) , [')'].
+  function_declaration_arguments([]), [')'] --> [')'].
+  function_declaration_arguments([Arg | Rest]) --> variable_name(Arg), [','], function_declaration_arguments(Rest).
+  function_declaration_arguments([Arg]) --> variable_name(Arg).
   % Funciton call definition
   function_call(function_call(Name, Arguments)) --> variable_name(Name), ['('], function_call_arguments(Arguments) , [')'].
   function_call_arguments([]), [')'] --> [')'].
