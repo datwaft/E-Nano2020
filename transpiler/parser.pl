@@ -1,5 +1,5 @@
 :- module(parser, [
-  
+  program/3
 ]).
 
 :- use_module(library(pcre)).
@@ -86,7 +86,11 @@
   function_declaration_arguments([Arg | Rest]) --> variable_name(Arg), [','], function_declaration_arguments(Rest).
   function_declaration_arguments([Arg]) --> variable_name(Arg).
   % Funciton call definition
-  function_call(function_call(Name, Arguments)) --> variable_name(Name), ['('], function_call_arguments(Arguments) , [')'].
+  function_call(function_call(Name, Arguments)) --> function_call_namespaces(Name), ['('], function_call_arguments(Arguments) , [')'].
+  % Function call namespaces
+  function_call_namespaces([Name | Rest]) --> variable_name(Name), ['.'], function_call_namespaces(Rest).
+  function_call_namespaces([Name]) --> variable_name(Name).
+  % Function call arguments
   function_call_arguments([]), [')'] --> [')'].
   function_call_arguments([Arg | Rest]) --> advanced_body(Arg), [','], function_call_arguments(Rest).
   function_call_arguments([Arg]) --> advanced_body(Arg).
