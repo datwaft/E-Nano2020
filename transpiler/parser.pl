@@ -10,6 +10,7 @@
 % ==========
   test_case(1, ['val', '<', 'int', '>', 'x', '=', '666']).
   test_case(2, ['val', '<', 'int', '->', 'int', '>', 'x', '=', 'x', '->', 'x', '+', '2']).
+  test_case(3, ['method', '<','(', 'T', ',', 'R', ')' , '(', '(', 'T', '->', 'R', ',', '[', 'T', ']', ')', '->', 'T', ')', '>', 'foo', '(', 'x', ',', 'y', ')', '=', 'null']).
 % Assignment definition
 % =====================
   assignment(assignment(Name, Value)) --> variable_name(Name), ['='], advanced_body(Value).
@@ -20,7 +21,10 @@
   declaration(declaration(Type, Name, Lambda)) --> ['val'], ['<'], lambda_type(Type), ['>'], variable_name(Name), ['='], lambda(Lambda).
 % Method definition
 % =================
-  % TODO
+  method(method(Type, Name, Arguments, Body)) --> ['method'], ['<'], lambda_type(Type), ['>'], variable_name(Name), open_parentheses, lambda_parameter_list(Arguments), close_parentheses, ['='], lambda_body(Body).
+  method(method(Generics, Type, Name, Arguments, Body)) --> ['method'], ['<'], open_parentheses, lambda_type_list(Generics), close_parentheses, open_parentheses, lambda_type(Type), close_parentheses, ['>'], variable_name(Name), open_parentheses, lambda_parameter_list(Arguments), close_parentheses, ['='], lambda_body(Body).
+  open_parentheses --> ['('].
+  close_parentheses --> [')'].
 % Lambda definition
 % =================
   lambda(lambda(Variable, Body)) --> variable_name(Variable), ['->'], lambda_body(Body).
@@ -38,7 +42,7 @@
   type(Type) --> lambda_type(Type).
   % Method type definition
   lambda_type(type(From, To)) --> type(From), ['->'], type(To).
-  lambda_type(type(From, To)) --> ['('], lambda_type_list(From) , [')'] , ['->'], type(To).
+  lambda_type(type(From, To)) --> ['('], lambda_type_list(From), [')'], ['->'], type(To).
   % Lambda type list
   lambda_type_list([]), [')'] --> [')'].
   lambda_type_list([Type | Rest]) --> type(Type), [','], lambda_type_list(Rest).
