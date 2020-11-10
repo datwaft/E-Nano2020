@@ -11,12 +11,23 @@
   test_case(1, ['val', '<', 'int', '>', 'x', '=', '666']).
   test_case(2, ['val', '<', 'int', '->', 'int', '>', 'x', '=', 'x', '->', 'x', '+', '2']).
   test_case(3, ['method', '<','(', 'T', ',', 'R', ')' , '(', '(', 'T', '->', 'R', ',', '[', 'T', ']', ')', '->', 'T', ')', '>', 'foo', '(', 'x', ',', 'y', ')', '=', 'null']).
+% Program body definition
+% =======================
+  program(program(Global, Main)) --> global(Global), main(Main).
 % Global scope definition
 % =======================
   global(Assignments) --> declaration_list(Assignments).
   declaration_list([]) --> [].
   declaration_list([Declaration | Rest]) --> declaration(Declaration), declaration_list(Rest).
   declaration_list([Declaration | Rest]) --> method(Declaration), declaration_list(Rest).
+% Main scope definition
+% =====================
+  main(Statements) --> ['main'], ['{'], statement_list(Statements), ['}'].
+  statement_list([]) --> [].
+  statement_list([Statement | Rest]) --> declaration(Statement), statement_list(Rest).
+  statement_list([Statement | Rest]) --> method(Statement), statement_list(Rest).
+  statement_list([Statement | Rest]) --> assignment(Statement), statement_list(Rest).
+  statement_list([Statement | Rest]) --> function_call(Statement), statement_list(Rest).
 % Assignment definition
 % =====================
   assignment(assignment(Name, Value)) --> variable_name(Name), ['='], advanced_body(Value).
@@ -27,8 +38,8 @@
   declaration(declaration(Type, Name, Lambda)) --> ['val'], ['<'], lambda_type(Type), ['>'], variable_name(Name), ['='], lambda(Lambda).
 % Method definition
 % =================
-  method(method(Type, Name, Arguments, Body)) --> ['method'], ['<'], lambda_type(Type), ['>'], variable_name(Name), open_parentheses, lambda_parameter_list(Arguments), close_parentheses, ['='], lambda_body(Body).
-  method(method(Generics, Type, Name, Arguments, Body)) --> ['method'], ['<'], open_parentheses, lambda_type_list(Generics), close_parentheses, open_parentheses, lambda_type(Type), close_parentheses, ['>'], variable_name(Name), open_parentheses, lambda_parameter_list(Arguments), close_parentheses, ['='], lambda_body(Body).
+  method(method(Type, Function, Body)) --> ['method'], ['<'], lambda_type(Type), ['>'], function_declaration(Function), ['='], lambda_body(Body).
+  method(method(Generics, Type, Function, Body)) --> ['method'], ['<'], open_parentheses, lambda_type_list(Generics), close_parentheses, open_parentheses, lambda_type(Type), close_parentheses, ['>'], function_declaration(Function), ['='], lambda_body(Body).
   open_parentheses --> ['('].
   close_parentheses --> [')'].
 % Lambda definition
