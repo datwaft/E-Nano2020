@@ -13,7 +13,7 @@
   test_case(3, ['method', '<','(', 'T', ',', 'R', ')' , '(', '(', 'T', '->', 'R', ',', '[', 'T', ']', ')', '->', 'T', ')', '>', 'foo', '(', 'x', ',', 'y', ')', '=', 'null']).
 % Global scope definition
 % =======================
-  global(Assignments) --> .
+  global(Assignments) --> declaration_list(Assignments).
   declaration_list([]) --> [].
   declaration_list([Declaration | Rest]) --> declaration(Declaration), declaration_list(Rest).
   declaration_list([Declaration | Rest]) --> method(Declaration), declaration_list(Rest).
