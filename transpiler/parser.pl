@@ -6,11 +6,6 @@
 
 :- table lambda_type/3.
 
-% Test cases
-% ==========
-  test_case(1, ['val', '<', 'int', '>', 'x', '=', '666']).
-  test_case(2, ['val', '<', 'int', '->', 'int', '>', 'x', '=', 'x', '->', 'x', '+', '2']).
-  test_case(3, ['method', '<','(', 'T', ',', 'R', ')' , '(', '(', 'T', '->', 'R', ',', '[', 'T', ']', ')', '->', 'T', ')', '>', 'foo', '(', 'x', ',', 'y', ')', '=', 'null']).
 % Program body definition
 % =======================
   program(program(Global, Main)) --> global(Global), main(Main).
