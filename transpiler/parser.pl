@@ -11,6 +11,12 @@
   test_case(1, ['val', '<', 'int', '>', 'x', '=', '666']).
   test_case(2, ['val', '<', 'int', '->', 'int', '>', 'x', '=', 'x', '->', 'x', '+', '2']).
   test_case(3, ['method', '<','(', 'T', ',', 'R', ')' , '(', '(', 'T', '->', 'R', ',', '[', 'T', ']', ')', '->', 'T', ')', '>', 'foo', '(', 'x', ',', 'y', ')', '=', 'null']).
+% Global scope definition
+% =======================
+  global(Assignments) --> .
+  declaration_list([]) --> [].
+  declaration_list([Declaration | Rest]) --> declaration(Declaration), declaration_list(Rest).
+  declaration_list([Declaration | Rest]) --> method(Declaration), declaration_list(Rest).
 % Assignment definition
 % =====================
   assignment(assignment(Name, Value)) --> variable_name(Name), ['='], advanced_body(Value).
