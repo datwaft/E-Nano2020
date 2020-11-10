@@ -5,6 +5,7 @@
 :- use_module(library(pcre)).
 
 :- table lambda_type/3.
+:- table operation/3.
 
 % Program body definition
 % =======================
@@ -99,7 +100,7 @@
     operation(operation(Operator, Term)) --> unary_ls_operator(Operator), specific_body(Term).
     operation(operation(Term, Operator)) --> specific_body(Term), unary_rs_operator(Operator).
   % Binary operation definition
-    operation(operation(First, Operator, Second)) --> specific_body(First), binary_operator(Operator), general_body(Second).
+    operation(operation(First, Operator, Second)) --> general_body(First), binary_operator(Operator), specific_body(Second).
   % Ternary operation definition
     ternary_operation(operation(True, Condition, False)) --> general_body(True), ['if'], general_body(Condition), ['else'], advanced_body(False).
 % Identifier definition
