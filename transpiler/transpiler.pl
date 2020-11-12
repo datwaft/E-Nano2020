@@ -8,7 +8,7 @@
 % =====
   % Transpile
   transpile(Tree, String) :-
-    phrase(assignment(Tree), Ls), atomic_list_concat(Ls, String).
+    phrase(term(Tree), Ls), atomic_list_concat(Ls, String).
 
 % Assignment definition
 % =====================
