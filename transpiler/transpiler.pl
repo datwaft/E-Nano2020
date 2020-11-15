@@ -100,19 +100,29 @@
 % Type definition
 % ===============
   type(type(Type)) --> identifier(Type).
-  type(list_type(Type)) --> "List<", type(Type), ">".
+  type(list_type(Type)) --> "List<", curated_type(Type), ">".
   type(Type) --> lambda_type(Type).
+  % Curated types
+  curated_type(type('boolean')) --> "Boolean", {!}.
+  curated_type(type('byte')) --> "Byte", {!}.
+  curated_type(type('short')) --> "Short", {!}.
+  curated_type(type('char')) --> "Character", {!}.
+  curated_type(type('int')) --> "Integer", {!}.
+  curated_type(type('float')) --> "Float", {!}.
+  curated_type(type('long')) --> "Long", {!}.
+  curated_type(type('double')) --> "Double", {!}.
+  curated_type(Type) --> type(Type).
   % Method type definition
-  lambda_type(type([From], To)) --> {From = To}, "UnaryOperator<", type(From), ", ", type(To), ">", {!}.
-  lambda_type(type([From], To)) --> "Function<", type(From), ", ", type(To), ">", {!}.
-  lambda_type(type([From1, From2], To)) --> "BiFunction<", type(From1), ", ", type(From2), ", ", type(To), ">", {!}.
-  lambda_type(type(From, To)) --> "Function<", lambda_type_list(From), ", ", type(To), ">".
+  lambda_type(type([From], To)) --> {From = To}, "UnaryOperator<", curated_type(From), ">", {!}.
+  lambda_type(type([From], To)) --> "Function<", curated_type(From), ", ", curated_type(To), ">", {!}.
+  lambda_type(type([From1, From2], To)) --> "BiFunction<", curated_type(From1), ", ", curated_type(From2), ", ", curated_type(To), ">", {!}.
+  lambda_type(type(From, To)) --> "Function<", lambda_type_list(From), ", ", curated_type(To), ">".
   % Lambda type list
   lambda_type_list([]) --> [].
-  lambda_type_list([Type]) --> type(Type).
+  lambda_type_list([Type]) --> curated_type(Type).
   lambda_type_list([Type | Rest]) -->
     { Rest \= [] },
-    type(Type), ", ", lambda_type_list(Rest).
+    curated_type(Type), ", ", lambda_type_list(Rest).
 % Term
 % ====
   term(number(Term)) --> [Term].
