@@ -75,7 +75,7 @@ import 'codemirror/theme/material.css'
 })
 
 export default class Editor extends Vue {
-  namefile = ""
+  filename = ""
   commandHistory = []
   command = ""
   input = ""
@@ -127,7 +127,7 @@ export default class Editor extends Vue {
         },
         body: JSON.stringify({
           source: this.input,
-          name: this.namefile
+          filename: this.filename
         })
       })
       const output = (await response.json()).messages
@@ -140,17 +140,17 @@ export default class Editor extends Vue {
   }
   async execute() {
     try { 
-      /*const response = undefined await fetch('http://localhost:8077/execute', {
+      const response = await fetch('http://localhost:8077/evaluate', {
         method: 'POST',
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          file: this.command.slice(0,-1)
+          filename: this.command.slice(0,-1)
         })
       })
-      const output = (await response.json()).messages    
-      this.command = JSON.parse(output) */
+      const output = (await response.json()).messages 
+      this.command += JSON.parse(output)
     } catch (err) {
       console.error(err)
     }
