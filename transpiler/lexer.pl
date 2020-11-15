@@ -60,6 +60,10 @@ startOneToken([C | Input], Partial, Token, Rest) :- isDigit(C), !,
 startOneToken([C,F | Input], Partial, Token, Rest) :- isDot(C),isDigit(F), !,
                                                     finishNumber(Input, [ F ,C,'0'| Partial], Token, Rest,'0','1','1')
 .
+
+startOneToken([C | Input], Partial, Token, Rest) :- isString(C), !,
+                                                    finishString(Input, [ C | Partial], Token, Rest)
+.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 startOneToken([C | Input], Partial, Token, Rest) :- isLetter(C), !,
@@ -99,6 +103,14 @@ finishToken([C | Input], Continue, Partial, Token, Rest) :- call(Continue, C), !
 .
 
 finishToken(Input, _, Partial, Token, Input) :- convertToAtom(Partial, Token).
+
+finishString([C | Input], Partial, Token, Rest) :- 	isNotString(C),!,
+													finishString(Input, [ C | Partial ], Token, Rest)
+.
+finishString([C | Input], Partial, Token, Input) :- 	isString(C),!,
+													convertToAtom([C|Partial], Token)
+.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % finalizar lectura de un numero
@@ -162,10 +174,13 @@ isLetter(D)  :- D @>= 'A', D @=< 'Z'.    % A .. Z
 
 isLetterOrDigit(C) :- isLetter(C),!.
 isLetterOrDigit(D) :- isDigit(D),!.
+isString('"').
+isNotString(D) :- D\='"'.
+
 
 % special tokens
 isSpecial(O)    :- member(O, ['\n','=', '<', '>', '*', '-', '+', '/', '\\', '.', '(', ')']), !.
-isSpecial(O)    :- member(O, ['{', '}', '"','[', ']', '&', '|', '%', '!', '?', ';', ',']), !.
+isSpecial(O)    :- member(O, ['{', '}' ,'[', ']', '&', '|', '%', '!', '?', ';', ',']), !.
 isSpecial(O)    :- member(O, ['@', ':']), !.
 
 % double operators
