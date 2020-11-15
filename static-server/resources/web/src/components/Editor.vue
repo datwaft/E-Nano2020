@@ -108,7 +108,12 @@ export default class Editor extends Vue {
         })
       })
       const output = (await response.json()).messages
-      this.output = JSON.parse(output)
+      try {
+        this.output = JSON.parse(output)
+      } catch {
+        this.output = output
+      }
+      console.log(this.output)
       this.status = "success"
     } catch (err) {
       this.status = "danger"
