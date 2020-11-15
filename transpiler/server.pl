@@ -31,7 +31,7 @@ compile_handler(Request) :-
   cors_enable,
   member(method(post), Request), !,
   http_read_json_dict(Request, Data),
-  transpile(Data, Response),
+  ( transpile(Data, Response) ; transpile(Response) ),
   reply_json_dict(Response).
 
 transpile(_{ source: Input, name: Name }, Response) :-
@@ -40,7 +40,7 @@ transpile(_{ source: Input, name: Name }, Response) :-
   transpile(Tree, Name, Output), !,
   ( catch(solve(_{ source: Output, name: Name }, Response), _, fail) ; solve(Response) ).
 
-transpile(_, _{ messages: [ ['error', 'The code wasn\'t able to be transpiled properly.'] ] }) :- !.
+transpile(_{ messages: [ ['error', 'The code wasn\'t able to be transpiled properly.'] ] }) :- !.
 
 solve(Input, Output) :-
   atom_json_dict(Source, Input, [as(atom)]),
