@@ -13,7 +13,7 @@
 % Program body definition
 % =======================
   program(program(Global, Main), ClassName) -->
-    "public class ", [ClassName], " {\n\n",
+    "public class ", [ClassName], " {\n",
     global(Global),
     main(Main),
     "  public static void main(String[] args) {\n",
@@ -44,6 +44,7 @@
   global(Assignments) --> declaration_list(Assignments).
   declaration_list([]) --> [].
   declaration_list([Declaration | Rest]) -->
+    "\n",
     "  ", declaration(Declaration), ";\n",
     declaration_list(Rest).
   declaration_list([Declaration | Rest]) -->
@@ -188,7 +189,7 @@
   % Binary operation definition
     operation(operation(First, Operator, Second)) --> general_body(First), " ", binary_operator(Operator), " ", specific_body(Second).
   % Ternary operation definition
-    ternary_operation(operation(True, Condition, False)) --> "(", general_body(Condition), " ? ", general_body(True), " : ", advanced_body(False), ")".
+    ternary_operation(operation(True, Condition, False)) --> "(", general_body(Condition), ")", " ? ", general_body(True), " : ", advanced_body(False).
 % Identifier definition
 % =====================
   % Variable name
