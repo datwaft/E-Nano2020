@@ -8,18 +8,18 @@
 % =====
   % Transpile
   transpile(Tree, ClassName, String) :-
-    phrase(program(Tree, ClassName), Ls0), phrase(head, Head), append(Head, Ls0, Ls), atomic_list_concat(Ls, String).
+    phrase(program(Tree, ClassName), Ls0), phrase(head, Head), append(Head, Ls0, Ls), atomic_list_concat(Ls, String), !.
 
 % Program body definition
 % =======================
   program(program(Global, Main), ClassName) -->
-    "public class ", [ClassName], " {\n",
-      global(Global),
-      main(Main),
-      "public static void main(String[] args) {\n",
-        "var me = new ", [ClassName], "();\n",
-        "me.main();\n",
-      "}\n",
+    "public class ", [ClassName], " {\n\n",
+    global(Global),
+    main(Main),
+    "  public static void main(String[] args) {\n",
+    "    var me = new ", [ClassName], "();\n",
+    "    me.main();\n",
+    "  }\n\n",
     "}\n".
 % Import definition
 % =================
@@ -44,29 +44,28 @@
   global(Assignments) --> declaration_list(Assignments).
   declaration_list([]) --> [].
   declaration_list([Declaration | Rest]) -->
-    declaration(Declaration), ";\n",
+    "  ", declaration(Declaration), ";\n",
     declaration_list(Rest).
   declaration_list([Declaration | Rest]) -->
-    method(Declaration), ";\n",
+    "\n",
+    "  ", method(Declaration), ";\n",
     declaration_list(Rest).
 % Main scope definition
 % =====================
   main(Statements) -->
-    "public void main() {\n",
-      statement_list(Statements), 
-    "}\n".
+    "\n",
+    "  public void main() {\n",
+    statement_list(Statements), 
+    "  }\n\n".
   statement_list([]) --> [].
   statement_list([Statement | Rest]) -->
-    declaration(Statement), ";\n",
+    "    ", declaration(Statement), ";\n",
     statement_list(Rest).
   statement_list([Statement | Rest]) -->
-    method(Statement), ";\n",
+    "    ", assignment(Statement), ";\n",
     statement_list(Rest).
   statement_list([Statement | Rest]) -->
-    assignment(Statement), ";\n",
-    statement_list(Rest).
-  statement_list([Statement | Rest]) -->
-    function_call(Statement), ";\n",
+    "    ", function_call(Statement), ";\n",
     statement_list(Rest).
 % Assignment definition
 % =====================
@@ -84,12 +83,12 @@
 % =================
   method(method(Type, Function, Body)) -->
     method_declaration(Type, Function), " {\n",
-      "return ", lambda_body(Body), ";\n",
-    "}".
+    "    return ", lambda_body(Body), ";\n",
+    "  }".
   method(method(Generics, Type, Function, Body)) -->
     "<", lambda_type_list(Generics), "> ", method_declaration(Type, Function), " {\n",
-      "return ", lambda_body(Body), ";\n",
-    "}".
+    "    return ", lambda_body(Body), ";\n",
+    "  }".
   % Method declaration
   method_declaration(type(From, To), function_declaration(Name, Arguments)) -->
     type(To), " ", variable_name(Name), "(", method_arguments(From, Arguments), ")".
@@ -189,7 +188,7 @@
   % Binary operation definition
     operation(operation(First, Operator, Second)) --> general_body(First), " ", binary_operator(Operator), " ", specific_body(Second).
   % Ternary operation definition
-    ternary_operation(operation(True, Condition, False)) --> general_body(Condition), " ? ", general_body(True), " : ", advanced_body(False).
+    ternary_operation(operation(True, Condition, False)) --> "(", general_body(Condition), " ? ", general_body(True), " : ", advanced_body(False), ")".
 % Identifier definition
 % =====================
   % Variable name

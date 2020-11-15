@@ -18,10 +18,10 @@
   declaration_list([Declaration | Rest]) --> method(Declaration), declaration_list(Rest).
 % Main scope definition
 % =====================
-  main(Statements) --> ['main'], ['{'], statement_list(Statements), ['}'].
+  main(Statements) --> ['main'], ['{'], statement_list(Statements), ['}'], {!}.
+  main([]) --> [].
   statement_list([]) --> [].
   statement_list([Statement | Rest]) --> declaration(Statement), statement_list(Rest).
-  statement_list([Statement | Rest]) --> method(Statement), statement_list(Rest).
   statement_list([Statement | Rest]) --> assignment(Statement), statement_list(Rest).
   statement_list([Statement | Rest]) --> function_call(Statement), statement_list(Rest).
 % Assignment definition
