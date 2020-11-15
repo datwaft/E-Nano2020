@@ -8,7 +8,7 @@
 % =====
   % Transpile
   transpile(Tree, ClassName, String) :-
-    phrase(program(Tree, ClassName), Ls), atomic_list_concat(Ls, String).
+    phrase(program(Tree, ClassName), Ls0), phrase(head, Head), append(Head, Ls0, Ls), atomic_list_concat(Ls, String).
 
 % Program body definition
 % =======================
@@ -21,6 +21,17 @@
         "me.main();\n",
       "}\n",
     "}\n".
+% Import definition
+% =================
+  head -->
+    "/*\n",
+    " * Código generado por E-Nano2020\n",
+    " */\n",
+    { get_flag('function', F1) },
+    { get_flag('list', F2) },
+    ( (F1 = 'true') -> "import java.util.function.*;\n" ),
+    ( (F2 = 'true') -> "import java.util.*;\n" ),
+    "\n".
 % Global scope definition
 % =======================
   global(Assignments) --> declaration_list(Assignments).
@@ -113,10 +124,10 @@
   curated_type(type('double')) --> "Double", {!}.
   curated_type(Type) --> type(Type).
   % Method type definition
-  lambda_type(type([From], To)) --> {From = To}, "UnaryOperator<", curated_type(From), ">", {!}.
-  lambda_type(type([From], To)) --> "Function<", curated_type(From), ", ", curated_type(To), ">", {!}.
-  lambda_type(type([From1, From2], To)) --> "BiFunction<", curated_type(From1), ", ", curated_type(From2), ", ", curated_type(To), ">", {!}.
-  lambda_type(type(From, To)) --> "Function<", lambda_type_list(From), ", ", curated_type(To), ">".
+  lambda_type(type([From], To)) --> {From = To}, "UnaryOperator<", curated_type(From), ">", { set_flag('function', 'true') }, {!}.
+  lambda_type(type([From], To)) --> "Function<", curated_type(From), ", ", curated_type(To), ">", { set_flag('function', 'true') }, {!}.
+  lambda_type(type([From1, From2], To)) --> "BiFunction<", curated_type(From1), ", ", curated_type(From2), ", ", curated_type(To), ">", { set_flag('function', 'true') }, {!}.
+  lambda_type(type(From, To)) --> "Function<", lambda_type_list(From), ", ", curated_type(To), ">", { set_flag('function', 'true') }.
   % Lambda type list
   lambda_type_list([]) --> [].
   lambda_type_list([Type]) --> curated_type(Type).
@@ -127,7 +138,7 @@
 % ====
   term(number(Term)) --> [Term].
   term(string(Term)) --> [Term].
-  term(list(Term)) --> "List.of(", list_body(Term), ")".
+  term(list(Term)) --> "List.of(", list_body(Term), ")", { set_flag('list', 'true') }.
   term(const(Term)) --> [Term].
   term(Term) --> variable_name(Term).
   % List body
