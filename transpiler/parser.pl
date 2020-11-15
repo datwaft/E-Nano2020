@@ -18,10 +18,10 @@
   declaration_list([Declaration | Rest]) --> method(Declaration), declaration_list(Rest).
 % Main scope definition
 % =====================
-  main(Statements) --> ['main'], ['{'], statement_list(Statements), ['}'].
+  main(Statements) --> ['main'], ['{'], statement_list(Statements), ['}'], {!}.
+  main([]) --> [].
   statement_list([]) --> [].
   statement_list([Statement | Rest]) --> declaration(Statement), statement_list(Rest).
-  statement_list([Statement | Rest]) --> method(Statement), statement_list(Rest).
   statement_list([Statement | Rest]) --> assignment(Statement), statement_list(Rest).
   statement_list([Statement | Rest]) --> function_call(Statement), statement_list(Rest).
 % Assignment definition
@@ -54,7 +54,7 @@
   type(list_type(Type)) --> ['['], type(Type), [']'].
   type(Type) --> lambda_type(Type).
   % Method type definition
-  lambda_type(type(From, To)) --> type(From), ['->'], type(To).
+  lambda_type(type([From], To)) --> type(From), ['->'], type(To).
   lambda_type(type(From, To)) --> ['('], lambda_type_list(From), [')'], ['->'], type(To).
   % Lambda type list
   lambda_type_list([]), [')'] --> [')'].
@@ -82,7 +82,7 @@
   function_declaration_arguments([Arg | Rest]) --> variable_name(Arg), [','], function_declaration_arguments(Rest).
   function_declaration_arguments([Arg]) --> variable_name(Arg).
   % Funciton call definition
-  function_call(function_call(Name, Arguments)) --> function_call_namespaces(Name), ['('], function_call_arguments(Arguments) , [')'].
+  function_call(function_call(Name, Arguments)) --> function_call_namespaces(Name), ['('], function_call_arguments(Arguments), [')'].
   % Function call namespaces
   function_call_namespaces([Name | Rest]) --> variable_name(Name), ['.'], function_call_namespaces(Rest).
   function_call_namespaces([Name]) --> variable_name(Name).
@@ -93,9 +93,9 @@
 % Operation definition
 % ====================
   % Operator definition
-    unary_ls_operator(operator(Operator)) --> [Operator], { member(Operator, ['+', '-', '~', '++', '--']) }.
-    unary_rs_operator(operator(Operator)) --> [Operator], { member(Operator, ['++', '--']) }.
-    binary_operator(operator(Operator)) --> [Operator], { member(Operator, ['+', '-', '*', '/', '%', '==', '!=', '<=', '>=', '<', '>', '&&', '||', '^']) }.
+    unary_ls_operator(lsoperator(Operator)) --> [Operator], { member(Operator, ['+', '-', '~', '++', '--']) }.
+    unary_rs_operator(rsoperator(Operator)) --> [Operator], { member(Operator, ['++', '--']) }.
+    binary_operator(bioperator(Operator)) --> [Operator], { member(Operator, ['+', '-', '*', '/', '%', '==', '!=', '<=', '>=', '<', '>', '&&', '||', '^']) }.
   % Unary operation definiton
     operation(operation(Operator, Term)) --> unary_ls_operator(Operator), specific_body(Term).
     operation(operation(Term, Operator)) --> specific_body(Term), unary_rs_operator(Operator).
