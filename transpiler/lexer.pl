@@ -42,8 +42,8 @@ startOneToken([C | Input], Partial, Token, Rest) :- isCero(C), !,
 startOneToken([C | Input], Partial, Token, Rest) :- isDigit(C), !,
                                                     finishNumber(Input, [ C | Partial], Token, Rest,'0','0','1')
 .
-startOneToken([C | Input], Partial, Token, Rest) :- isDot(C), !,
-                                                    finishNumber(Input, [ C ,'0'| Partial], Token, Rest,'0','1','1')
+startOneToken([C,F | Input], Partial, Token, Rest) :- isDot(C),isDigit(F), !,
+                                                    finishNumber(Input, [ F ,C,'0'| Partial], Token, Rest,'0','1','1')
 .
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
