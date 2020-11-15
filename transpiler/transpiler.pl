@@ -59,9 +59,9 @@
   declaration(declaration(Type, Name, Value)) -->
     declaration(declaration(Type, Name)), " = ", advanced_body(Value).
   declaration(declaration(Type, Name)) -->
-    type(Type), " ", variable_name(Name).
+    "final ", type(Type), " ", variable_name(Name).
   declaration(declaration(Type, Name, Lambda)) -->
-    lambda_type(Type), " ", variable_name(Name), " = ", lambda(Lambda).
+    "final ", lambda_type(Type), " ", variable_name(Name), " = ", lambda(Lambda).
 % Method definition
 % =================
   method(method(Type, Function, Body)) -->
@@ -139,6 +139,8 @@
   % Funciton call definition
   function_call(function_call(Name, Arguments)) --> function_call_namespaces(Name), "(", function_call_arguments(Arguments), ")".
   % Function call namespaces
+    % With println
+    function_call_namespaces([var('println')]) --> "System.out.println", {!}.
   function_call_namespaces([Name | Rest]) --> variable_name(Name), ".", function_call_namespaces(Rest).
   function_call_namespaces([Name]) --> variable_name(Name).
   % Function call arguments
