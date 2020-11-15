@@ -29,9 +29,16 @@
     " */\n",
     { get_flag('function', F1) },
     { get_flag('list', F2) },
-    ( (F1 = 'true') -> "import java.util.function.*;\n" ),
-    ( (F2 = 'true') -> "import java.util.*;\n" ),
-    "\n".
+    import_function(F1),
+    import_list(F2),
+    "\n",
+    { set_flag('function', 'false') },
+    { set_flag('list', 'false') }.
+
+  import_function(F) --> {F = 'true'}, "import java.util.function.*;\n", !.
+  import_function(_) --> [].
+  import_list(F) --> {F = 'true'}, "import java.util.*;\n", !.
+  import_list(_) --> [].
 % Global scope definition
 % =======================
   global(Assignments) --> declaration_list(Assignments).
