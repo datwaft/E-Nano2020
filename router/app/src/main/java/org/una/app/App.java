@@ -65,7 +65,7 @@ public class App extends RouterNanoHTTPD {
     try {
       new App();
     } catch (IOException ioe) {
-      LogUtils.format(Style.ERROR, "%nCould not start server: %s%n", LogUtils.bold(ioe.getLocalizedMessage()));
+      LogUtils.format(Style.ERROR, "%nCould not start server: %s%n", LogUtils.bold("%s", ioe.getLocalizedMessage()));
     }
   }
 
@@ -101,13 +101,13 @@ public class App extends RouterNanoHTTPD {
       try {
         var info = DatabaseUtils.getInfo();
 
-        LogUtils.formatD(Style.SUCCESS, "Successful response to '%s' request [%s].%n", LogUtils.bold(session.getUri()), LogUtils.bold("%s", session.getMethod()));
+        LogUtils.formatD(Style.SUCCESS, "Successful response to '%s' request [%s].%n", LogUtils.bold("%s", session.getUri()), LogUtils.bold("%s", session.getMethod()));
 
         var response = newFixedLengthResponse(Response.Status.OK, MIME_PLAINTEXT, info.toString());
         response = RouterUtils.allowCors(response, session);
         return response;
       } catch (Exception e) {
-        LogUtils.formatD(Style.WARNING, "Invalid request for '%s' [%s].%n", LogUtils.bold(session.getUri()), LogUtils.bold("%s", session.getMethod()));
+        LogUtils.formatD(Style.WARNING, "Invalid request for '%s' [%s].%n", LogUtils.bold("%s", session.getUri()), LogUtils.bold("%s", session.getMethod()));
         var response = newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
         response = RouterUtils.allowCors(response, session);
         return response;
@@ -140,8 +140,8 @@ public class App extends RouterNanoHTTPD {
         var output = new HashMap<String, String>();
         output.put("messages", CompileUtils.compileString(data).toString());
 
-        LogUtils.formatD(Style.SUCCESS, "Successful response to '%s' request [%s].", LogUtils.bold(session.getUri()), LogUtils.bold("%s", session.getMethod()));
-        LogUtils.format(Style.NOTE, "The source code is:%n%s%n", LogUtils.bold(data));
+        LogUtils.formatD(Style.SUCCESS, "Successful response to '%s' request [%s].", LogUtils.bold("%s", session.getUri()), LogUtils.bold("%s", session.getMethod()));
+        LogUtils.format(Style.NOTE, "The source code is:%n%s%n", LogUtils.bold("%s", data));
 
         var response = newFixedLengthResponse(Response.Status.OK, "application/json", new JSONObject(output).toString());
         response = RouterUtils.allowCors(response, session);

@@ -34,11 +34,11 @@ compile_handler(Request) :-
   transpile(Data, Response),
   reply_json_dict(Response).
 
-transpile(_{ source: Input }, Response) :-
-  string_to_tokens(Input, Tokens),
-  phrase(program(Tree), Tokens),
-  transpile(Tree, 'TempClassName', Output),
-  ( catch(solve(_{ source: Output}, Response), _, fail) ; solve(Response) ).
+transpile(_{ source: Input, name: Name }, Response) :-
+  string_to_tokens(Input, Tokens), !,
+  phrase(program(Tree), Tokens), !,
+  transpile(Tree, Name, Output), !,
+  ( catch(solve(_{ source: Output, name: Name }, Response), _, fail) ; solve(Response) ).
 
 transpile(_, _{ messages: [ ['error', 'The code wasn\'t able to be transpiled properly.'] ] }) :- !.
 

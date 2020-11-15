@@ -122,7 +122,6 @@ export default class Editor extends Vue {
       } catch {
         this.output = output
       }
-      console.log(this.output)
       this.status = "success"
     } catch (err) {
       this.status = "danger"

@@ -34,6 +34,7 @@ import org.json.JSONArray;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 public class CompileUtils {
 
@@ -61,6 +62,8 @@ public class CompileUtils {
       try {
       result = compiler.compile(source, "default");
       } catch (IOException _ex) { }
+    } catch (Exception ex) {
+      result = Pair.with(null, ImmutableList.of(Pair.with("error", ex.toString())));
     }
 
     return result.getValue1().stream()
