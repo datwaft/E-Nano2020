@@ -105,7 +105,7 @@ finishToken([C | Input], Continue, Partial, Token, Rest) :- call(Continue, C), !
 finishToken(Input, _, Partial, Token, Input) :- convertToAtom(Partial, Token).
 
 finishString([C | Input], Partial, Token, Rest) :- 	isNotString(C),!,
-													finishString(Input, [ C | Partial ], Token, Rest)
+													finishString(Input, [ C | Partial ], Token, Rest),!
 .
 finishString([C | Input], Partial, Token, Input) :- 	isString(C),!,
 													convertToAtom([C|Partial], Token)
@@ -138,10 +138,9 @@ finishNumber([A,C|Input], Partial, Token, Rest,Sign,Dec,Strt) :- isE(A),!,
 												finishNumber(Input, [ C ,A | Partial ], Token, Rest,Sign,Dec,Strt)
 .
 
-finishNumber(Input, Partial, Token, Input,_,_,_) :-	convertToAtom(Partial, Token)
+finishNumber(Input, Partial, Token, Input,Sign,Dec,Strt) :- 	isDecimal(Strt),!,
+														finishNumber(Input, ['0'|Partial], Token, Input,Sign,Dec,'1')
 .
-
-finishNumber(Input, [], Token, Input,_,_,_) :- convertToAtom(['0'], Token).
 
 finishNumber(Input, Partial, Token, Input,_,_,_) :-	convertToAtom(Partial, Token)
 .
