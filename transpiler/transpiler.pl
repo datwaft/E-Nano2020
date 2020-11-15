@@ -1,5 +1,5 @@
 :- module(transpiler, [
-  transpile/3
+  transpile/
 ]).
 
 :- set_prolog_flag(double_quotes, chars).
