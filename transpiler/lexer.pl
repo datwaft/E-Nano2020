@@ -9,20 +9,35 @@
 :- use_module(library(pcre)).
 :- use_module(library(readutil)).
 
-getTokens(Input, Tokens) :- extractTokens(Input, ExTokens), 
-                            delete(ExTokens, [], Tokens) % delete empty tokens
+getTokens(Input, Tokens) :- extractTokens(Input, ExTokens),
+							comment(ExTokens,'/*','*/',RFirst),
+							comment(RFirst,'//','\n',Rest),
+                            delete(Rest, [], Tokens) % delete empty tokens
 .
 % tokenizar y quitar espacion en blanco
 extractTokens([], []) :- !.
 extractTokens(Input, [Token | Tokens]) :-       skipWhiteSpace(Input, InputNWS),
                                                 startOneToken(InputNWS, Token, Rest),
                                                 extractTokens(Rest, Tokens)
+												
 .
 % quitar espacios en blanco
 skipWhiteSpace([C | Input], Output) :- isWhiteSpace(C), !, 
                                        skipWhiteSpace(Input, Output)
 .
 skipWhiteSpace(Input, Input).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%eliminar comentarios multi linea
+comment([],_X,_Y,_L) :-!.
+comment([X|R],X,Y,L) :- drop(R,X,Y,L),!.
+comment([F|R],X,Y,[F|L]) :- ( F\=X ), comment(R,X,Y,L),!.
+
+drop([],_X,_Y,[]) :- !.
+drop([Y|R],X,Y,L) :- comment(R,X,Y,L).
+drop([F|R],X,Y,L) :- ( F\=Y ), drop(R,X,Y,L),!.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 startOneToken(Input, Token, Rest) :- startOneToken(Input, [], Token, Rest).
 startOneToken([], P, P, []).
@@ -88,7 +103,8 @@ finishToken(Input, _, Partial, Token, Input) :- convertToAtom(Partial, Token).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % finalizar lectura de un numero
 % parametros extra
-% Signo Decimal iniciado
+%Signo Decimal iniciado
+
 finishNumber([C|Input], Partial, Token, Rest,Sign,Dec,Strt) 	:- isCero(C),!,
 															(	isStarter(Strt) ->	
 																finishNumber(Input, [ C | Partial ], Token, Rest,Sign,Dec,'1');
@@ -110,22 +126,27 @@ finishNumber([A,C|Input], Partial, Token, Rest,Sign,Dec,Strt) :- isE(A),!,
 												finishNumber(Input, [ C ,A | Partial ], Token, Rest,Sign,Dec,Strt)
 .
 
-finishNumber(Input, Input, Token, Input,_,_,_) :- convertToAtom(['0'], Token).
+finishNumber(Input, Partial, Token, Input,_,_,_) :-	convertToAtom(Partial, Token)
+.
+
+finishNumber(Input, [], Token, Input,_,_,_) :- convertToAtom(['0'], Token).
 
 finishNumber(Input, Partial, Token, Input,_,_,_) :-	convertToAtom(Partial, Token)
 .
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-isWhiteSpace(C) :- member(C, ['\r', '\n', '\t', ' ']).
+isWhiteSpace(C) :- member(C, ['\r', '\t', ' ']).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+isVoid('').
+isVoidList(['']).
 isDot(D)	:- 	D='.'.
 isE(D)		:- 	member(D,['e','E']).
 isSign(D)	:- 	member(D,['+','-']).
 isNSign(D)	:- 	D ='-'.
 isCero(D)	:-	D='0'.
-isDigit(D)  :- 	D @>= '1', D @=< '9'.
+isDigit(D)  :- 	D @>= '0', D @=< '9'.
 
 isDecimal(D)	:-	D='0'.
 isNegative(D)	:-	D='1'.
@@ -143,7 +164,7 @@ isLetterOrDigit(C) :- isLetter(C),!.
 isLetterOrDigit(D) :- isDigit(D),!.
 
 % special tokens
-isSpecial(O)    :- member(O, ['=', '<', '>', '*', '-', '+', '/', '\\', '.', '(', ')']), !.
+isSpecial(O)    :- member(O, ['\n','=', '<', '>', '*', '-', '+', '/', '\\', '.', '(', ')']), !.
 isSpecial(O)    :- member(O, ['{', '}', '"','[', ']', '&', '|', '%', '!', '?', ';', ',']), !.
 isSpecial(O)    :- member(O, ['@', ':']), !.
 
