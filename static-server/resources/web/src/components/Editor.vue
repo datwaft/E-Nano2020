@@ -35,7 +35,15 @@
           </b-button>
         </b-col>
       </b-row>
-      
+      <b-row class="editor-row">
+        <b-col 
+          class="fixed-width-evaluator" 
+          v-on:keyup.enter="executeCommand">
+          <codemirror
+            v-model="command"
+            :options=evaluatorOptions />
+        </b-col>
+      </b-row>
     </b-container>
     <b-modal
       title="Warning"
@@ -68,6 +76,8 @@ import 'codemirror/theme/material.css'
 
 export default class Editor extends Vue {
   namefile = ""
+  commandHistory = []
+  command = ""
   input = ""
   output: Array<[string, string]> = []
 
@@ -75,7 +85,11 @@ export default class Editor extends Vue {
   show = false
   mode = ""
 
-  
+  evaluatorOptions = {
+    tabSize: 2,
+    theme: 'material',
+    lineWrapping: true
+  }
   inputOptions = {
     tabSize: 2,
     mode: 'text/x-java',
@@ -124,6 +138,23 @@ export default class Editor extends Vue {
       console.error(err)
     }
   }
+  async execute() {
+    try { 
+      /*const response = undefined await fetch('http://localhost:8077/execute', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          file: this.command.slice(0,-1)
+        })
+      })
+      const output = (await response.json()).messages    
+      this.command = JSON.parse(output) */
+    } catch (err) {
+      console.error(err)
+    }
+  }
   clearInput() {
     this.mode = "input"
     this.show = true
@@ -137,6 +168,13 @@ export default class Editor extends Vue {
     setTimeout(() => this.mode = "", 300)
     if (this.mode == "input") this.input = ""
     else this.output = []
+  }
+  executeCommand() {
+    this.command = this.command.slice(0,-3)
+    //this.commandHistory.push(this.command) // Something happen . . .?
+    if(this.command == "clear") this.commandHistory = []
+    else this.execute()
+    this.command = ""
   }
 }
 </script>
@@ -167,6 +205,11 @@ export default class Editor extends Vue {
   max-width: 50%;
   min-width: 50%;
 }
+.fixed-width-evaluator {
+  width: 100%;
+  max-width: 100%;
+  min-width: 100%;
+}
 
 .input-file-name{
   width: 14%;
@@ -175,5 +218,11 @@ export default class Editor extends Vue {
   margin-left: 0.7%;
   margin-right: 3%;
 }
-
+.input-file-name > b-form-input{
+  width: 24%;
+  max-width: 24%;
+  min-width: 24%;
+  margin-left: 0.7%;
+  margin-right: 3%;
+}
 </style>
