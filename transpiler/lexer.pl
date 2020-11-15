@@ -28,7 +28,7 @@ startOneToken(Input, Token, Rest) :- startOneToken(Input, [], Token, Rest).
 startOneToken([], P, P, []).
 
 
-startOneToken([C, A | Input], Partial, Token, Rest) :- doubleSpecial(C, A), !, write(Input), write(C),
+startOneToken([C, A | Input], Partial, Token, Rest) :- doubleSpecial(C, A), !,
                                                     finishSpecial([A | Input], [ C | Partial], Token, Rest)
 .
 
