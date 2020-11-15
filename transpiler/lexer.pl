@@ -11,7 +11,8 @@
 
 getTokens(Input, Tokens) :- extractTokens(Input, ExTokens),
 							comment(ExTokens,'/*','*/',RFirst),
-							comment(RFirst,'//','\n',Rest),
+							comment(RFirst,'//','\n',RSec),
+							delete(RSec, '\n' , Rest), 
                             delete(Rest, [], Tokens) % delete empty tokens
 .
 % tokenizar y quitar espacion en blanco
