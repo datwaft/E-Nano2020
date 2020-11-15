@@ -12,24 +12,30 @@
         </b-col>
       </b-row>
       <b-row>
-        <b-col class="text-center">
+        <b-col class="input-file-name">
+          <b-input-group prepend="Name">
+            <b-form-input v-model="namefile"></b-form-input>
+          </b-input-group>
+        </b-col>
+        <b-col>
             <b-button squared variant="light" @click="clearInput">
               <font-awesome-icon icon="broom"/> Clear
             </b-button>
         </b-col>
-        <b-col class="text-center">
+        <b-col>
           <b-button squared :variant="status" @click="compile" :disabled="disabled">
             <font-awesome-icon :icon="icon" v-if="!disabled"/>
             <b-spinner small v-else></b-spinner>
             Compile
           </b-button>
         </b-col>
-        <b-col class="text-center">
+        <b-col>
           <b-button squared variant="light" @click="clearOutput">
             <font-awesome-icon icon="broom"/> Clear
           </b-button>
         </b-col>
       </b-row>
+      
     </b-container>
     <b-modal
       title="Warning"
@@ -61,6 +67,7 @@ import 'codemirror/theme/material.css'
 })
 
 export default class Editor extends Vue {
+  namefile = ""
   input = ""
   output: Array<[string, string]> = []
 
@@ -68,6 +75,7 @@ export default class Editor extends Vue {
   show = false
   mode = ""
 
+  
   inputOptions = {
     tabSize: 2,
     mode: 'text/x-java',
@@ -104,7 +112,8 @@ export default class Editor extends Vue {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          source: this.input
+          source: this.input,
+          name: this.namefile
         })
       })
       const output = (await response.json()).messages
@@ -132,9 +141,25 @@ export default class Editor extends Vue {
 }
 </script>
 
+<style>
+
+.CodeMirror {
+  height: 14rem !important;
+  font-size: 1rem !important;
+}
+
+.Result pre code {
+  font-size: 87.5%;
+}
+
+</style>
+
 <style scoped>
 .editor-row {
-  margin: 2%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  margin-left: -0.5%;
+  margin-right: -0.5%;
 }
 
 .fixed-width {
@@ -142,15 +167,13 @@ export default class Editor extends Vue {
   max-width: 50%;
   min-width: 50%;
 }
-</style>
 
-<style>
-.CodeMirror {
-  height: 25rem !important;
-  font-size: 1rem !important;
+.input-file-name{
+  width: 14%;
+  max-width: 14%;
+  min-width: 14%;
+  margin-left: 0.7%;
+  margin-right: 3%;
 }
 
-.Result pre code {
-  font-size: 87.5%;
-}
 </style>
