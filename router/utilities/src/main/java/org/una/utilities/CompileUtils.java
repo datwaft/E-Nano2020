@@ -39,6 +39,7 @@ import java.io.FileDescriptor;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.stream.Stream;
 import java.util.HashMap;
 
 public class CompileUtils {
@@ -52,6 +53,9 @@ public class CompileUtils {
       result = compiler.compile(source, filename);
     } catch (IOException _ex) { }
     if (result.getValue0() != null) {
+      if (compilations.get(filename) != null) {
+        result = Pair.with(result.getValue0() , Stream.concat(Stream.of(Pair.with("warning", "The previous compilation was overriden.")), result.getValue1().stream()).collect(ImmutableList.toImmutableList()));
+      }
       compilations.put(filename, result.getValue0());
     }
     return result.getValue1().stream()

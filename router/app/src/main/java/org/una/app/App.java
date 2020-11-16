@@ -143,6 +143,7 @@ public class App extends RouterNanoHTTPD {
         output.put("messages", CompileUtils.compileString(data, filename).toString());
 
         LogUtils.formatD(Style.SUCCESS, "Successful response to '%s' request [%s].", LogUtils.bold("%s", session.getUri()), LogUtils.bold("%s", session.getMethod()));
+        LogUtils.format(Style.NOTE, "The file name is: '%s'", LogUtils.bold("%s", filename));
         LogUtils.format(Style.NOTE, "The source code is:%n%s%n", LogUtils.bold("%s", data));
 
         var response = newFixedLengthResponse(Response.Status.OK, "application/json", new JSONObject(output).toString());
@@ -179,11 +180,14 @@ public class App extends RouterNanoHTTPD {
         var post_data = RouterUtils.processData(session);
         var filename = post_data.getString("filename");
 
+        var result = CompileUtils.evaluate(filename);
+
         var output = new HashMap<String, String>();
-        output.put("messages", CompileUtils.evaluate(filename));
+        output.put("output", result);
 
         LogUtils.formatD(Style.SUCCESS, "Successful response to '%s' request [%s].", LogUtils.bold(session.getUri()), LogUtils.bold("%s", session.getMethod()));
-        LogUtils.format(Style.NOTE, "The file name is:%n%s%n", LogUtils.bold(filename));
+        LogUtils.format(Style.NOTE, "The file name is: '%s'%n", LogUtils.bold("%s", filename));
+        LogUtils.format(Style.NOTE, "The output is: '%s'%n", LogUtils.bold("%s", result));
 
         var response = newFixedLengthResponse(Response.Status.OK, "application/json", new JSONObject(output).toString());
         response = RouterUtils.allowCors(response, session);
