@@ -1,45 +1,95 @@
 # E-Nano2020 README
 
+Esta es la documentación del proyecto del 2020 de nombre de E-Nano2020 el cual es una aplicación web a la que se le ingresa código en formato E-Nano el cual es transpilado a Java para luego ser compilado; luego usando el nombre del archivo se puede ejecutar el `main` de dicho código.
+
+Se recomienda al lector leer la documentación completamente antes de ejecutar el programa.
+
 ## Pre-requisitos
 
 Para poder ejecutar este proyecto se requiere tener lo siguiente instalado en el computador (preferiblemente la última versión):
 
 1. **Java 14**
+2. **Gradle**
+3. **SWI-Prolog**
+4. Un navegador, preferiblemente **Google Chrome**.
 
-2. **Maven**
+## Ejecución del proyecto
 
-## Compilación y ejecución
+### Compilación y ejecución de los servidores
 
-### TLDR
+Para ejecutar el proyecto se debe ejecutar el archivo `compile-execute.bat` el cual se encuentra en la carpeta raíz del proyecto a como se puede ver a continuación. Este archivo ejecuta otros tres scripts distintos en diferentes ventanas los cuales compilan y ejecutan cada uno de los servidores del proyecto, los cuales son:
 
-```shell
-mvn package
-mvn exec:java
-```
+- Servidor de router para compilar código Java y extraer información de la base de datos.
 
----
+- Servidor web estático que se encarga de servir los archivos estáticos.
 
-**NOTA**: antes de empezar a ejecutar comandos se debe entrar a cualquiera de las dos carpetas de proyecto de _Maven_, las cuales son: _E-Nano2020 Router_ y _E-Nano2020 Static Server_, las cuales contienen un archivo `pom.xml`; esto dependiendo del proyecto que desee ejecutar. **Lo recomendable es ejecutar los dos proyectos a la vez, ya que están intrínsecamente enlazados**. A continuación unos ejemplos:
+- Servidor de Prolog el cual se encarga de transpilar el código E-Nano a Prolog.
 
-#### Raíz del repositorio - NO ingresar comandos de _Maven_ ahí.
+![image](https://user-images.githubusercontent.com/37723586/99212218-24235000-2790-11eb-9d88-d87a0405a00a.png)
 
-![image](https://user-images.githubusercontent.com/37723586/94335309-00b20500-ff98-11ea-84c0-cb660f77f779.png)
+Una vez los tres servidores se compilaron y ejecutar satisfactoriamente, a como se puede ver en la siguiente imagen se puede proceder a ejecutar la aplicación web en el navegador ingresando la url del servidor estático, la cual por defecto es http://localhost:8088/, en el navegador.
 
-#### Raíz de los proyectos de Maven - SÍ ingresar comandos de _Maven_ ahí.
+![image](https://user-images.githubusercontent.com/37723586/99212488-c2afb100-2790-11eb-9f0f-4ffe04494856.png)
 
-#### _E-Nano2020 Router_
+### Ingreso a la aplicación web
 
-![image](https://user-images.githubusercontent.com/37723586/94331775-7c0db980-ff8c-11ea-8237-8442f112bba6.png)
+Una vez se ingresó la url del servidor estático en el navegador se va a ver una pantalla como la siguiente:
 
-#### _E-Nano2020 Static Server_
+![image](https://user-images.githubusercontent.com/37723586/99212593-0e625a80-2791-11eb-89c7-b785042756e1.png)
 
-![image](https://user-images.githubusercontent.com/37723586/94331785-8af46c00-ff8c-11ea-85cd-74f54244763d.png)
+#### Panel de código
 
-### Configuración
+En el panel que está arriba a la derecha se puede ingresar código E-Nano el cual al apretar el botón que dice **Compile** se va a transpilar a código de Java para luego ser compilado y guardado en el servidor _Router_. Los errores o mensajes de compilación o transpilación se pueden ver en el panel de mensajes.
 
-Algunos parámetros de los servidores se pueden configurar, esto se hace modificando el archivo `server.properties` dentro de `/resources` del servidor (e.g. `/E-Nano2020 Router/src/main/resources/server.properties`).
+Este panel se puede limpiar con el botón que está justo debajo de este que dice **Clear**.
 
-#### Port
+Adicionalmente, el código de Java transpilado se puede ver en la consola del servidor **Router** una vez que se envió la petición de compilación a este servidor.
+
+#### Panel de mensajes
+
+En este panel, el cual se encuentra arriba a la izquierda, se pueden ver mensajes de éxito o error de compilación y/o transpilación una vez que algún código fue compilado. Los mensajes se muestran en código de colores según su tipo:
+
+- Los mensajes **rojos** son de **error**, significan que la compilación/transpilación no se pudo llevar con éxito.
+
+- Los mensajes **verdes** son de **éxito**, significan que la compilación se llevo a cabo con éxito.
+
+- Los mensajes **amarillos** son de **advertencia**, sirven para llamar la atención del usuario sobre algún detalle peculiar que deben tener presente.
+
+- Los mensajes **blancos** son de **anotación**, significan algo que el usuario puede querer saber pero no necesariamente algo que deban arreglar.
+
+#### Campo de nombre del archivo
+
+Este campo se pude ver justo **debajo** del **panel de código** y sirve para ingresar el nombre que se desea que el archivo tenga al ser compilado y transpilado, esto afecta el nombre de la clase durante la compilación y el identificador con el que se va a guardar el archivo ejecutable en el servidor.
+
+Un nombre válido que se puede ingresar en este campo es un nombre formado por una letra inicial y luego letras o números finalizando con un `.no`. Por ejemplo: `File.no`.
+
+Si este campo tiene un dato erróneo se va a mostrar con un borde rojo y el botón de compilar se va a desactivar.
+
+Si se compila un archivo cuyo nombre fue utilizado antes para otro archivo se va a mostrar una advertencia en el panel de mensajes.
+
+#### Panel de ejecución
+
+Este panel se puede abajo del todo, debajo de los dos paneles de mensajes y código.
+
+En este panel se puede ingresar algunos de los siguientes comandos, y una vez que se presiona la tecla `enter` este comando se va a ejecutar, los comandos son los siguientes:
+
+- `<filename>.main()`: este comando sirve para ejecutar el archivo llamado `<filename>` el cual no debe tener la terminación `.no` y debió ser compilado con anterioridad. Un ejemplo es: `File.main()`.
+
+- `clear`: sirve para limpiar el panel de ejecución.
+
+- `help`: sirve para mostrar un mensaje de ayuda para saber los comandos que se pueden utilizar.
+
+#### Ejemplo de uso del programa
+
+![image](https://user-images.githubusercontent.com/37723586/99213493-6b5f1000-2793-11eb-977f-894c5051a873.png)
+
+## Configuración
+
+Algunos parámetros de los servidores se pueden configurar, esto se hace modificando el archivo `server.properties` dentro de `/resources` del servidor (e.g. `/router/resources/config/server.properties` o `/static-server/resources/config/server.properties`).
+
+### Port
+
+Este parámetro está disponible para el servidor de router y el servidor estático.
 
 **Ejemplo:**
 
@@ -47,86 +97,7 @@ Algunos parámetros de los servidores se pueden configurar, esto se hace modific
 port=8080
 ```
 
-Esto haría que el server use el puerto `8080`.
-
-### Compilación
-
-Para compilar se usa el comando:
-
-```shell
-mvn package
-```
-
-**Nota:** si aparecen _warnings_ es un problema de la última versión de Maven, que tiene problemas con un acceso reflectivo de Google, esto no causa problemas para ejecutar el proyecto satisfactoriamente.
-
-El proyecto terminó de compilarse una vez que aparece un texto como este:
-
-```shell
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  11.073 s
-[INFO] Finished at: 2020-09-16T15:50:33-06:00
-[INFO] ------------------------------------------------------------------------
-```
-
-### Ejecución
-
-Para ejecutar el servidor se utiliza el comando:
-
-```shell
-mvn exec:java
-```
-
-Una vez se terminó de iniciar el servidor va a aparecer una pantalla similar a la siguiente:
-
-![image](https://user-images.githubusercontent.com/37723586/93396337-b660b380-f834-11ea-9277-78b2bb011a9b.png)
-
-**Nota:** Una vez que el servidor se está ejecutando no lo cierre hasta que haya terminado completamente de usar el proyecto, posiblemente con `CTRL+C` o `CTRL+Z` - dependiendo de su sistema operativo.
-
----
-
-A continuación un ejemplo de los dos servidores corriendo usando _TMUX_ para hacer las divisiones en la consola.
-
-![image](https://user-images.githubusercontent.com/37723586/95702923-fe43e200-0c0a-11eb-9659-18e291c7d8fc.png)
-
-### Conexión desde el navegador
-
-La url para la conexión debe aparecer en la consola una vez se inició el servidor, pero la por defecto es la siguiente: `http://localhost:8088/`.
-
-Una vez entró a la url le debe salir una pantalla similar a la siguiente:
-
-![image](https://user-images.githubusercontent.com/37723586/95702614-1a934f00-0c0a-11eb-97fe-b249be318e6a.png)
-
-En el recuadro negro de la izquierda se puede introducir el código Java a compilar, y una vez el botón verde **Submit** es apretado en el recuadro negro de la derecha va a parecer si se compiló o no correctamente al igual que los posibles errores de compilación.
-
----
-
-A continuación unos ejemplos:
-
-![image](https://user-images.githubusercontent.com/37723586/95703022-3cd99c80-0c0b-11eb-8f89-cf0770e0cb51.png)
-
-![image](https://user-images.githubusercontent.com/37723586/95703043-4fec6c80-0c0b-11eb-81cb-552aa7f6503c.png)
-
----
-
-Los botones de **Clear** sirven para limpiar los datos de cualquiera de los dos recuadros, primero se solicita una confirmación al usuario.
-
----
-
-A continuación un ejemplo:
-
-![image](https://user-images.githubusercontent.com/37723586/95703088-74e0df80-0c0b-11eb-986c-f5c988ab8744.png)
-
----
-
-El botón de arriba a la derecha que dice **About** sirve para ver los integrantes del equipo de trabajo, los cuales son pedidos como _JSON_ al servidor luego de que este hace una petición a una base de datos _MongoDB_ para traer los datos, es posible que dure un rato trayendo los datos.
-
----
-
-A continuación un ejemplo:
-
-![image](https://user-images.githubusercontent.com/37723586/95704429-081b1480-0c0e-11eb-8499-df450147bd23.png)
+Esto haría que el servidor utilice el puerto `8080`.
 
 ## Estructura del proyecto
 
@@ -134,42 +105,90 @@ La estructura del proyecto es la siguiente:
 
 ```tree
 \ [root]
-├───E-Nano2020 Router
-│   └───src
-│       ├───main
-│       │   ├───java
-│       │   │   └───com
-│       │   │       └───group03
-│       │   │           ├───compiler
-│       │   │           └───utils
-│       │   └───resources
-│       └───test
-│           └───java
-│               └───com
-│                   └───group03
-└───E-Nano2020 Static Server
-    └───src
-        ├───main
-        │   ├───java
-        │   │   └───com
-        │   │       └───group03
-        │   │           └───utils
-        │   └───resources
-        │       └───web
-        │           ├───css
-        │           ├───icon
-        │           └───js
-        └───test
-            └───java
-                └───com
-                    └───group03
+├───.github
+│   └───workflows
+├───.shell-scripts
+├───router
+│   ├───app
+│   │   └───src
+│   │       ├───main
+│   │       │   └───java
+│   │       │       └───org
+│   │       │           └───una
+│   │       │               └───app
+│   │       └───test
+│   │           └───java
+│   │               └───org
+│   │                   └───una
+│   │                       └───app
+│   ├───buildSrc
+│   │   └───src
+│   │       └───main
+│   │           └───groovy
+│   ├───compiler
+│   │   └───src
+│   │       └───main
+│   │           └───java
+│   │               └───org
+│   │                   └───una
+│   │                       └───compiler
+│   ├───gradle
+│   │   └───wrapper
+│   ├───resources
+│   │   └───config
+│   └───utilities
+│       └───src
+│           └───main
+│               └───java
+│                   └───org
+│                       └───una
+│                           └───utilities
+├───static-server
+│   ├───app
+│   │   └───src
+│   │       ├───main
+│   │       │   └───java
+│   │       │       └───org
+│   │       │           └───una
+│   │       │               └───app
+│   │       └───test
+│   │           └───java
+│   │               └───org
+│   │                   └───una
+│   │                       └───app
+│   ├───buildSrc
+│   │   └───src
+│   │       └───main
+│   │           └───groovy
+│   ├───gradle
+│   │   └───wrapper
+│   ├───resources
+│   │   ├───config
+│   │   └───web
+│   │       ├───dist
+│   │       │   ├───css
+│   │       │   └───js
+│   │       ├───public
+│   │       └───src
+│   │           ├───components
+│   │           └───plugins
+│   └───utilities
+│       └───src
+│           └───main
+│               └───java
+│                   └───org
+│                       └───una
+│                           └───utilities
+└───transpiler
 ```
 
-Los archivos web están en la carpeta `/E-Nano2020 Static Server/src/main/resources/web`; el resto del proyecto se maneja de la forma estándar de Java.
+Los archivos web están en la carpeta `/static-server/resources/web/dist`; el resto del proyecto se maneja de la forma estándar de Java.
 
 ## Extras
 
-De extras se está implementado la extra de traer los datos de **About** de una base de datos MongoDB.
+### MongoDB
+
+De extras está implementado la extra de traer los datos de **About** de una base de datos _MongoDB_.
 
 ---
 
@@ -179,6 +198,12 @@ A continuación se muestra la estructura de las colecciones en _MongoDB_.
 
 ![image](https://user-images.githubusercontent.com/37723586/95703518-50393780-0c0c-11eb-9280-3d80886fee71.png)
 
+---
+
+### Typescript
+
+Otro extra que está implementado es el de utilizar _Typescript_ para hacer el servidor web, en este caso fue implementado usando *VueCLI* con *Typescript*.
+
 ## Créditos
 
 **Grupo de trabajo No.03:**
@@ -186,12 +211,11 @@ A continuación se muestra la estructura de las colecciones en _MongoDB_.
   402450355
 - Joy Bonilla Fley\
   402360421
-- Jose Barrantes Araya\
+- José Barrantes Araya\
   207600954
 - Natalia Solano Azofeifa\
   117290958
-- Luis David Villalobos Gonzalez\
+- Luis David Villalobos González\
   117540697  
-  
 
 **Horario:** 10am.
