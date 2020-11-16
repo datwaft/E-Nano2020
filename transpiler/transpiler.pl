@@ -144,7 +144,7 @@
 % Type definition
 % ===============
   type(type(Type)) --> identifier(Type).
-  type(list_type(Type)) --> "List<", curated_type(Type), ">".
+  type(list_type(Type)) --> "List<", curated_type(Type), ">", { set_flag('list', 'true') }.
   type(Type) --> lambda_type(Type).
   % Curated types
   curated_type(type('boolean')) --> "Boolean", {!}.
