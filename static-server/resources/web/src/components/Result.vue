@@ -25,6 +25,10 @@ export default class Result extends ResultProps { }
   color: #EEFFFF;
 }
 
+.Result * {
+  overflow-wrap: break-word;
+}
+
 .error {
   color: #e2777a;
 }

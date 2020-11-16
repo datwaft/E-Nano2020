@@ -14,7 +14,7 @@
       <b-row>
         <b-col class="input-file-name">
           <b-input-group prepend="Name">
-            <b-form-input v-model="filename"></b-form-input>
+            <b-form-input v-model="filename" :class="{ wrong: wrongFileName }" placeholder="File.no"></b-form-input>
           </b-input-group>
         </b-col>
         <b-col>
@@ -23,7 +23,7 @@
             </b-button>
         </b-col>
         <b-col>
-          <b-button squared :variant="status" @click="compile" :disabled="disabled">
+          <b-button squared :variant="status" @click="compile" :disabled="disabled || wrongFileName">
             <font-awesome-icon :icon="icon" v-if="!disabled"/>
             <b-spinner small v-else></b-spinner>
             Compile
@@ -36,12 +36,8 @@
         </b-col>
       </b-row>
       <b-row class="editor-row">
-        <b-col 
-          class="fixed-width-evaluator" 
-          v-on:keyup.enter="executeCommand">
-          <codemirror
-            v-model="command"
-            :options=evaluatorOptions />
+        <b-col class="fixed-width-evaluator">
+          <Evaluator :history="history" v-model="command" @enter="executeCommand()" />
         </b-col>
       </b-row>
     </b-container>
@@ -65,19 +61,22 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import Result from './Result.vue';
+import Evaluator from './Evaluator.vue';
 import 'codemirror/mode/clike/clike.js'
 import 'codemirror/theme/material.css'
 
 @Component({
   components: {
-    Result
+    Result,
+    Evaluator
   },
 })
 
 export default class Editor extends Vue {
-  filename = ""
-  commandHistory = []
+  filename = "File.no"
+  history: Array<object> = []
   command = ""
+
   input = ""
   output: Array<[string, string]> = []
 
@@ -85,24 +84,11 @@ export default class Editor extends Vue {
   show = false
   mode = ""
 
-  evaluatorOptions = {
-    tabSize: 2,
-    theme: 'material',
-    lineWrapping: true
-  }
   inputOptions = {
     tabSize: 2,
     mode: 'text/x-java',
     theme: 'material',
     lineNumbers: true,
-    lineWrapping: true
-  }
-  outputOptions = {
-    tabSize: 2,
-    mode: 'text',
-    theme: 'material',
-    lineNumbers: false,
-    readOnly: true,
     lineWrapping: true
   }
 
@@ -117,6 +103,10 @@ export default class Editor extends Vue {
     }
   }
 
+  get wrongFileName() {
+    return !/[a-zA-Z_]+\.no/.test(this.filename)
+  }
+
   async compile() {
     try {
       this.status = "secondary"
@@ -127,18 +117,23 @@ export default class Editor extends Vue {
         },
         body: JSON.stringify({
           source: this.input,
-          filename: this.filename
+          filename: this.filename.slice(0, -3)
         })
       })
       const output = (await response.json()).messages
-      this.output = JSON.parse(output)
+      try {
+        this.output = JSON.parse(output)
+      } catch {
+        this.output = output
+      }
       this.status = "success"
     } catch (err) {
       this.status = "danger"
       console.error(err)
     }
   }
-  async execute() {
+
+  async execute(command: string) {
     try { 
       const response = await fetch('http://localhost:8077/evaluate', {
         method: 'POST',
@@ -146,15 +141,22 @@ export default class Editor extends Vue {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          filename: this.command.slice(0,-1)
+          filename: command
         })
       })
-      const output = (await response.json()).messages 
-      this.command += JSON.parse(output)
+      const output = (await response.json()).output 
+      this.history.push({
+        command: command + ".main()",
+        output: {
+          type: ( output === "Class not found."  ? "error" : "message"),
+          message: output
+        }
+      })
     } catch (err) {
       console.error(err)
     }
   }
+
   clearInput() {
     this.mode = "input"
     this.show = true
@@ -169,11 +171,43 @@ export default class Editor extends Vue {
     if (this.mode == "input") this.input = ""
     else this.output = []
   }
+
   executeCommand() {
-    this.command = this.command.slice(0,-3)
-    //this.commandHistory.push(this.command) // Something happen . . .?
-    if(this.command == "clear") this.commandHistory = []
-    else this.execute()
+    const matches = /([a-zA-Z_]*)\.main\(\)/.exec(this.command)
+    if (this.command.trim().length == 0) {
+      this.history.push({
+        command: "",
+        output: {
+          type: "message",
+          message: ""
+        }
+      })
+    }
+    else if (this.command == "clear") {
+      this.history = []
+    } else if (matches && matches.length > 1) {
+      this.execute(matches[1])
+    } else if (this.command == "help") {
+      this.history.push({
+        command: this.command,
+        output: {
+          type: "success",
+          message: "Hello! These are the possible commands:\n" + 
+                   "- <filename>.main() : execute the file named <filename> (without the .no termination).\n" + 
+                   "  Example: File.main()\n" + 
+                   "- clear : clear the evaluation console.\n" + 
+                   "- help : show this help message."
+        }
+      })
+    } else {
+      this.history.push({
+        command: this.command,
+        output: {
+          type: "error",
+          message: "Invalid command."
+        }
+      })
+    }
     this.command = ""
   }
 }
@@ -182,7 +216,11 @@ export default class Editor extends Vue {
 <style>
 
 .CodeMirror {
-  height: 14rem !important;
+  height: 35vh !important;
+  font-size: 1rem !important;
+}
+
+.CodeMirror * {
   font-size: 1rem !important;
 }
 
@@ -225,4 +263,10 @@ export default class Editor extends Vue {
   margin-left: 0.7%;
   margin-right: 3%;
 }
+
+.wrong {
+  border: 2px solid red;
+  border-radius: 4px;
+}
+
 </style>

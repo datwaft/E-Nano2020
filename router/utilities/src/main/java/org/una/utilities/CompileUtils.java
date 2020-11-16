@@ -37,9 +37,10 @@ import java.io.FileOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileDescriptor;
 import java.io.PrintStream;
-import java.lang.reflect.Method; 
-import java.util.Map; 
-import java.util.HashMap; 
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.stream.Stream;
+import java.util.HashMap;
 
 public class CompileUtils {
 
@@ -50,8 +51,11 @@ public class CompileUtils {
     Pair<Class<?>, ImmutableList<Pair<String, String>>> result = null;
     try {
       result = compiler.compile(source, filename);
-    } catch (IOException _ex) { }      
+    } catch (IOException _ex) { }
     if (result.getValue0() != null) {
+      if (compilations.get(filename) != null) {
+        result = Pair.with(result.getValue0() , Stream.concat(Stream.of(Pair.with("warning", "The previous compilation was overriden.")), result.getValue1().stream()).collect(ImmutableList.toImmutableList()));
+      }
       compilations.put(filename, result.getValue0());
     }
     return result.getValue1().stream()
@@ -67,13 +71,13 @@ public class CompileUtils {
       .map(JSONArray::new)
       .collect(JSONArray::new, JSONArray::put, JSONArray::put);
   }
-  
+
   public static String evaluate(String filename) {
     if (compilations.get(filename) != null) {
       try {
         Class<?> cls = compilations.get(filename);
         Method method = cls.getMethod("main", String[].class);
-        String[] params = null; 
+        String[] params = null;
 
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         System.setOut(new PrintStream(buffer));
@@ -91,9 +95,6 @@ public class CompileUtils {
     } else {
       return "Class not found.";
     }
-  } 
+  }
 
 }
-
-
-
