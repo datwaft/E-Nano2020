@@ -14,7 +14,7 @@
       <b-row>
         <b-col class="input-file-name">
           <b-input-group prepend="Name">
-            <b-form-input v-model="namefile"></b-form-input>
+            <b-form-input v-model="filename"></b-form-input>
           </b-input-group>
         </b-col>
         <b-col>

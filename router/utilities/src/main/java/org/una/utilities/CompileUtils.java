@@ -35,6 +35,7 @@ import org.json.JSONArray;
 import java.io.IOException;
 import java.io.FileOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileDescriptor;
 import java.io.PrintStream;
 import java.lang.reflect.Method; 
 import java.util.Map; 
@@ -50,7 +51,7 @@ public class CompileUtils {
     try {
       result = compiler.compile(source, filename);
     } catch (IOException _ex) { }      
-    if(result.getValue0() != null){
+    if (result.getValue0() != null) {
       compilations.put(filename, result.getValue0());
     }
     return result.getValue1().stream()
@@ -67,19 +68,27 @@ public class CompileUtils {
       .collect(JSONArray::new, JSONArray::put, JSONArray::put);
   }
   
-  public static String evaluate(String filename){
-    if(compilations.get(filename) != null){
-      Class<?> cls = compilations.get(filename);
-      Method method = cls.getMethod("main", String[].class);
-      String[] params = null; 
-      ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-      System.setOut(new PrintStream(buffer));
-      method.invoke(null, (Object) params);
-      System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
-      String content = buffer.toString();
-      buffer.reset();
-      return content;
-    }else{
+  public static String evaluate(String filename) {
+    if (compilations.get(filename) != null) {
+      try {
+        Class<?> cls = compilations.get(filename);
+        Method method = cls.getMethod("main", String[].class);
+        String[] params = null; 
+
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(buffer));
+
+        method.invoke(null, (Object) params);
+
+        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+        String content = buffer.toString();
+        buffer.reset();
+
+        return content;
+      } catch (Exception ex) {
+        return ex.toString();
+      }
+    } else {
       return "Class not found.";
     }
   } 
