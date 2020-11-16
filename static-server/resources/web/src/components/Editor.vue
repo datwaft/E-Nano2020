@@ -104,7 +104,7 @@ export default class Editor extends Vue {
   }
 
   get wrongFileName() {
-    return !/[a-zA-Z_]+\.no/.test(this.filename)
+    return !/[a-zA-Z_]\w*\.no/.test(this.filename)
   }
 
   async compile() {
@@ -173,7 +173,7 @@ export default class Editor extends Vue {
   }
 
   executeCommand() {
-    const matches = /([a-zA-Z_]*)\.main\(\)/.exec(this.command)
+    const matches = /([a-zA-Z_]\w*)\.main\(\)/.exec(this.command)
     if (this.command.trim().length == 0) {
       this.history.push({
         command: "",
