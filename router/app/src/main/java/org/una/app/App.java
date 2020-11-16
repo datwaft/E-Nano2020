@@ -77,6 +77,7 @@ public class App extends RouterNanoHTTPD {
 
   @Override
   public void addMappings() {//añade rutas
+    this.addRoute("/evaluate", EvaluateHandler.class);
     this.addRoute("/compile", CodeHandler.class);
     this.addRoute("/info", InfoHandler.class);
   }
@@ -136,12 +137,53 @@ public class App extends RouterNanoHTTPD {
       try {
         var post_data = RouterUtils.processData(session);
         var data = post_data.getString("source");
+        var filename = post_data.getString("filename");
 
         var output = new HashMap<String, String>();
-        output.put("messages", CompileUtils.compileString(data).toString());
+        output.put("messages", CompileUtils.compileString(data, filename).toString());
 
         LogUtils.formatD(Style.SUCCESS, "Successful response to '%s' request [%s].", LogUtils.bold("%s", session.getUri()), LogUtils.bold("%s", session.getMethod()));
         LogUtils.format(Style.NOTE, "The source code is:%n%s%n", LogUtils.bold("%s", data));
+
+        var response = newFixedLengthResponse(Response.Status.OK, "application/json", new JSONObject(output).toString());
+        response = RouterUtils.allowCors(response, session);
+        return response;
+      } catch (IOException | ResponseException e) {
+        LogUtils.formatD(Style.WARNING, "Invalid request for '%s' [%s].%n", session.getUri(), session.getMethod());
+        var response = newFixedLengthResponse(Response.Status.NOT_FOUND, MIME_PLAINTEXT, "The requested resource does not exist.");
+        response = RouterUtils.allowCors(response, session);
+        return response;
+      }
+    }
+  }
+
+  public static class EvaluateHandler extends DefaultStreamHandler {
+    @Override
+    public String getMimeType() {
+      return MIME_PLAINTEXT;
+    }
+
+    @Override
+    public IStatus getStatus() {
+      return Response.Status.OK;
+    }
+
+    @Override
+    public InputStream getData() {
+      return new ByteArrayInputStream("Your request was successful :D".getBytes());
+    }
+
+    @Override
+    public Response post(UriResource uriResource, Map<String, String> urlParams, IHTTPSession session) {
+      try {
+        var post_data = RouterUtils.processData(session);
+        var filename = post_data.getString("filename");
+
+        var output = new HashMap<String, String>();
+        output.put("messages", CompileUtils.evaluate(filename));
+
+        LogUtils.formatD(Style.SUCCESS, "Successful response to '%s' request [%s].", LogUtils.bold(session.getUri()), LogUtils.bold("%s", session.getMethod()));
+        LogUtils.format(Style.NOTE, "The file name is:%n%s%n", LogUtils.bold(filename));
 
         var response = newFixedLengthResponse(Response.Status.OK, "application/json", new JSONObject(output).toString());
         response = RouterUtils.allowCors(response, session);

@@ -33,39 +33,27 @@ import org.javatuples.Pair;
 import org.json.JSONArray;
 
 import java.io.IOException;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
+import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileDescriptor;
+import java.io.PrintStream;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.HashMap;
 
 public class CompileUtils {
 
-  private static Pattern className = Pattern.compile("class\\s+(\\S+)");
-  private static Pattern publicClassName = Pattern.compile("public class\\s+(\\S+)");
+  private static Map<String, Class<?>> compilations = new HashMap<>();
 
-  public static JSONArray compileString(String source) {
-    var filename = "";
-    var publicMatcher = publicClassName.matcher(source);
-    if (publicMatcher.find()) {
-      filename = publicMatcher.group(1);
-    } else {
-      var matcher = className.matcher(source);
-      if (matcher.find()) {
-        filename = matcher.group(1);
-      }
-    }
-
+  public static JSONArray compileString(String source, String filename) {
     var compiler = new Compiler();
     Pair<Class<?>, ImmutableList<Pair<String, String>>> result = null;
     try {
       result = compiler.compile(source, filename);
-    } catch (IOException _ex) {
-    } catch (IllegalArgumentException ex) {
-      try {
-      result = compiler.compile(source, "default");
-      } catch (IOException _ex) { }
-    } catch (Exception ex) {
-      result = Pair.with(null, ImmutableList.of(Pair.with("error", ex.toString())));
+    } catch (IOException _ex) { }
+    if (result.getValue0() != null) {
+      compilations.put(filename, result.getValue0());
     }
-
     return result.getValue1().stream()
       .map(
         (p) -> Pair.with(switch(p.getValue0()) {
@@ -80,7 +68,29 @@ public class CompileUtils {
       .collect(JSONArray::new, JSONArray::put, JSONArray::put);
   }
 
+  public static String evaluate(String filename) {
+    if (compilations.get(filename) != null) {
+      try {
+        Class<?> cls = compilations.get(filename);
+        Method method = cls.getMethod("main", String[].class);
+        String[] params = null;
+
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(buffer));
+
+        method.invoke(null, (Object) params);
+
+        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+        String content = buffer.toString();
+        buffer.reset();
+
+        return content;
+      } catch (Exception ex) {
+        return ex.toString();
+      }
+    } else {
+      return "Class not found.";
+    }
+  }
+
 }
-
-
-
